@@ -1,0 +1,69 @@
+[gd_scene load_steps=12 format=3 uid="uid://vd63hulqofaf"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_rhgpa"]
+[ext_resource type="Texture2D" uid="uid://c00jtv3k7rt0y" path="res://assets/sprites/knight.png" id="1_syfp4"]
+[ext_resource type="Script" path="res://scripts/stamina_bar.gd" id="2_6iocy"]
+[ext_resource type="Texture2D" uid="uid://vtdvyodkwiuu" path="res://assets/healthbarUnder.png" id="3_xupbs"]
+[ext_resource type="Texture2D" uid="uid://n8pfmo1vncp8" path="res://assets/healthbarProgress.png" id="4_ec3fv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_belvw"]
+atlas = ExtResource("1_syfp4")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wsi5r"]
+atlas = ExtResource("1_syfp4")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mt14o"]
+atlas = ExtResource("1_syfp4")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2gbf5"]
+atlas = ExtResource("1_syfp4")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_n3jik"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_belvw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wsi5r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mt14o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2gbf5")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dvx6e"]
+radius = 6.0
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+script = ExtResource("1_rhgpa")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -12)
+sprite_frames = SubResource("SpriteFrames_n3jik")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -5)
+shape = SubResource("CircleShape2D_dvx6e")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="." node_paths=PackedStringArray("player")]
+offset_left = -33.0
+offset_top = -31.0
+offset_right = 31.0
+offset_bottom = -19.0
+texture_under = ExtResource("3_xupbs")
+texture_progress = ExtResource("4_ec3fv")
+script = ExtResource("2_6iocy")
+player = NodePath("..")
