@@ -1,11 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://71t4snupia8g"]
+[gd_scene load_steps=12 format=3 uid="uid://71t4snupia8g"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_34oth"]
 [ext_resource type="Texture2D" uid="uid://cq2fk3fjq4x0p" path="res://assets/sprites/knight.png" id="1_418hy"]
 [ext_resource type="Texture2D" uid="uid://db03ephebyopf" path="res://assets/stamina bar/healthbarUnder.png" id="3_64smo"]
 [ext_resource type="Script" path="res://scripts/stamina_bar.gd" id="3_e0qct"]
 [ext_resource type="Texture2D" uid="uid://o5p2femwjvph" path="res://assets/stamina bar/healthbarProgress.png" id="4_lrslp"]
-[ext_resource type="Script" path="res://scripts/oxygen_bar.gd" id="6_d6d63"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kii50"]
 atlas = ExtResource("1_418hy")
@@ -43,26 +42,11 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="GDScript" id="GDScript_57yl5"]
-script/source = "extends AnimatedSprite2D
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-"
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_wipbo"]
 radius = 11.0
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 5
-scale = Vector2(0.765923, 0.740375)
 collision_layer = 2
 script = ExtResource("1_34oth")
 
@@ -73,30 +57,17 @@ sprite_frames = SubResource("SpriteFrames_yllr2")
 animation = &"idle"
 autoplay = "idle"
 frame_progress = 0.45497
-script = SubResource("GDScript_57yl5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(3, -15)
 shape = SubResource("CircleShape2D_wipbo")
 
-[node name="StaminaBar" type="TextureProgressBar" parent="." node_paths=PackedStringArray("player")]
-offset_left = -14.0
-offset_top = -55.0
-offset_right = 50.0
-offset_bottom = -45.0
-scale = Vector2(0.593815, 1)
+[node name="TextureProgressBar" type="TextureProgressBar" parent="." node_paths=PackedStringArray("player")]
+offset_left = -28.0
+offset_top = -54.0
+offset_right = 36.0
+offset_bottom = -44.0
 texture_under = ExtResource("3_64smo")
 texture_progress = ExtResource("4_lrslp")
 script = ExtResource("3_e0qct")
-player = NodePath("..")
-
-[node name="OxygenBar" type="TextureProgressBar" parent="." node_paths=PackedStringArray("player")]
-offset_left = -17.0
-offset_top = -10.0
-offset_right = 47.0
-rotation = -1.5777
-scale = Vector2(0.360843, 0.480565)
-texture_under = ExtResource("3_64smo")
-texture_progress = ExtResource("4_lrslp")
-script = ExtResource("6_d6d63")
 player = NodePath("..")
