@@ -2,13 +2,20 @@ extends CharacterBody2D
 	
 const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
-var jump = 0
+var jump_count = 0
 var stamina = 0
 signal stamina_changed;
 
-func restore_stamina() -> void:
+func set_jump_count(value) -> void:
+	jump_count = value
+
+func set_stamina(value) -> void:
+	stamina = value
+	stamina_changed.emit()
+	
+func restore_stamina(value) -> void:
 	if is_on_floor():
-		stamina = min(0, stamina + 1)
+		stamina = min(0, stamina + value)
 		stamina_changed.emit()
 	
 func deplete_stamina(value) -> void:
@@ -23,9 +30,9 @@ func _physics_process(delta: float) -> void:
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_accept"):
 		if is_on_floor():
-			jump = 0
-		jump += 1
-		if jump <= 1 or (jump == 2 and stamina > -75):
+			jump_count = 0
+		jump_count += 1
+		if jump_count <= 1 or (jump_count == 2 and stamina > -75):
 			deplete_stamina(25)
 			velocity.y = JUMP_VELOCITY - (stamina * 2)
 
@@ -38,10 +45,10 @@ func _physics_process(delta: float) -> void:
 			temp_speed += 100 + stamina
 			deplete_stamina(1)
 		else:
-			restore_stamina()
+			restore_stamina(1)
 		velocity.x = direction * temp_speed
 	else:
-		restore_stamina()
+		restore_stamina(1)
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
 	move_and_slide()
