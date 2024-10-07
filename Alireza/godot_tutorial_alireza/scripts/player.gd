@@ -16,6 +16,8 @@ var max_stamina = 100.0
 var current_stamina = max_stamina
 var recovery_timer = 0.0
 
+@onready var animation_sprite = $AnimatedSprite2D
+
 func _physics_process(delta: float) -> void:
 	var current_speed = SPEED
 	var current_jump_velocity = JUMP_VELOCITY
@@ -67,10 +69,27 @@ func _physics_process(delta: float) -> void:
 
 	var direction = Input.get_axis("ui_left", "ui_right")
 	
+	if is_on_floor():
+		if direction == 0:
+			animation_sprite.play("idle")
+		else:
+			animation_sprite.play("run")
+	else:
+			animation_sprite.play("jump")
+	
+	
+	if direction < 0:
+		animation_sprite.flip_h = true
+	elif direction > 0:
+		animation_sprite.flip_h = false
+	
 	if direction:
 		velocity.x = direction * current_speed
+		
 	else:
 		velocity.x = move_toward(velocity.x, 0, current_speed)
+		
+	
 
 	move_and_slide()
 
