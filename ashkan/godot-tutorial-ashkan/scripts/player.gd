@@ -9,6 +9,8 @@ var in_water = false
 signal stamina_changed
 signal oxygen_changed
 
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+
 func set_jump_count(value) -> void:
 	jump_count = value
 
@@ -42,7 +44,7 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 
 	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept"):
+	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
 			jump_count = 0
 		jump_count += 1
@@ -52,7 +54,17 @@ func _physics_process(delta: float) -> void:
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction := Input.get_axis("ui_left", "ui_right")
+	var direction := Input.get_axis("move_left", "move_right")
+	animated_sprite.flip_h = false if direction == 1 else true if direction == -1 else animated_sprite.flip_h
+	
+	if is_on_floor():
+		if direction == 0:
+			animated_sprite.play("idle")
+		else:
+			animated_sprite.play("run")
+	else:
+		animated_sprite.play("jump")
+
 	var temp_speed = SPEED
 	if direction:
 		if stamina > -100 and Input.is_key_pressed(KEY_SHIFT):
@@ -72,6 +84,7 @@ func _physics_process(delta: float) -> void:
 		get_tree().reload_current_scene()
 		
 	if in_water:
+		velocity.y /= 1.2
 		deplete_oxygen(0.25)
 	else:
 		restore_oxygen(1)

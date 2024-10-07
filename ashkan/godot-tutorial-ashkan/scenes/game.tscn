@@ -1,13 +1,17 @@
-[gd_scene load_steps=16 format=4 uid="uid://dp0inah0y7ntu"]
+[gd_scene load_steps=20 format=4 uid="uid://dp0inah0y7ntu"]
 
 [ext_resource type="PackedScene" uid="uid://71t4snupia8g" path="res://scenes/player.tscn" id="1_h17a3"]
+[ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_lc0pv"]
 [ext_resource type="Texture2D" uid="uid://ck8dkggpmhtag" path="res://assets/sprites/world_tileset.png" id="2_7a465"]
+[ext_resource type="FontFile" uid="uid://c2bhklmtfwu7o" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_22rnx"]
 [ext_resource type="PackedScene" uid="uid://70i6lu4k6drv" path="res://scenes/platform.tscn" id="3_hohas"]
 [ext_resource type="Script" path="res://scripts/water.gd" id="3_tsgl7"]
 [ext_resource type="PackedScene" uid="uid://ddfbq1rqm3dky" path="res://scenes/coin.tscn" id="4_vu5ji"]
 [ext_resource type="PackedScene" uid="uid://y8vac1mkbgpy" path="res://scenes/killzone.tscn" id="5_52rib"]
 [ext_resource type="PackedScene" uid="uid://cwdi32g5jp1pm" path="res://scenes/wall.tscn" id="6_w270a"]
 [ext_resource type="PackedScene" uid="uid://bp7hd728alk1x" path="res://scenes/mushroom.tscn" id="7_6bq2a"]
+[ext_resource type="PackedScene" uid="uid://d2gla5pgvk0jp" path="res://scenes/slime.tscn" id="9_xkmy2"]
+[ext_resource type="FontFile" uid="uid://tbnutu3g2a37" path="res://assets/fonts/PixelOperator8.ttf" id="10_udvc4"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yfyxc"]
 texture = ExtResource("2_7a465")
@@ -183,6 +187,21 @@ size = Vector2(354, 144.5)
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_ln7mi"]
 distance = -52.0
 
+[sub_resource type="Animation" id="Animation_57ao2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(625, -54)]
+}
+
 [sub_resource type="Animation" id="Animation_kbmlb"]
 resource_name = "move"
 length = 4.0
@@ -200,21 +219,6 @@ tracks/0/keys = {
 "values": [Vector2(625, -54), Vector2(1031, -129)]
 }
 
-[sub_resource type="Animation" id="Animation_57ao2"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(625, -54)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ncgxl"]
 _data = {
 "RESET": SubResource("Animation_57ao2"),
@@ -222,6 +226,23 @@ _data = {
 }
 
 [node name="Game" type="Node2D"]
+
+[node name="GameManager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("1_lc0pv")
+
+[node name="ScoreLabel" type="Label" parent="GameManager"]
+offset_left = -417.0
+offset_top = -579.0
+offset_right = -365.0
+offset_bottom = -460.0
+theme_override_colors/font_color = Color(1, 1, 0.419608, 1)
+theme_override_fonts/font = ExtResource("2_22rnx")
+theme_override_font_sizes/font_size = 8
+text = "YOU COLLECTED 0 COINS!"
+horizontal_alignment = 1
+autowrap_mode = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="Background" type="TileMapLayer" parent="."]
 position = Vector2(-473, -122)
@@ -239,6 +260,7 @@ position = Vector2(-259, -61)
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(120, -4.00001)
 zoom = Vector2(2, 2)
+process_callback = 0
 limit_left = -600
 limit_top = -1000
 limit_right = 100000
@@ -274,6 +296,9 @@ shape = SubResource("WorldBoundaryShape2D_ln7mi")
 
 [node name="coin" parent="Coins" instance=ExtResource("4_vu5ji")]
 position = Vector2(-421, -518)
+
+[node name="coin12" parent="Coins" instance=ExtResource("4_vu5ji")]
+position = Vector2(-186, -141)
 
 [node name="coin2" parent="Coins" instance=ExtResource("4_vu5ji")]
 position = Vector2(-362, -518)
@@ -328,11 +353,31 @@ position = Vector2(1223, -413)
 position = Vector2(1079, -312)
 rotation = 3.12901
 
-[node name="Mushroom" parent="." instance=ExtResource("7_6bq2a")]
+[node name="Mushrooms" type="Node2D" parent="."]
 position = Vector2(160, 105)
 
-[node name="Mushroom2" parent="." instance=ExtResource("7_6bq2a")]
-position = Vector2(555, -358)
+[node name="Mushroom" parent="Mushrooms" instance=ExtResource("7_6bq2a")]
+
+[node name="Mushroom2" parent="Mushrooms" instance=ExtResource("7_6bq2a")]
+position = Vector2(395, -463)
+
+[node name="Mushroom3" parent="Mushrooms" instance=ExtResource("7_6bq2a")]
+position = Vector2(-266, -175)
+
+[node name="Slime" parent="." instance=ExtResource("9_xkmy2")]
+position = Vector2(-158, -69)
+
+[node name="Labels" type="Node2D" parent="."]
+
+[node name="Label" type="Label" parent="Labels"]
+offset_left = -239.0
+offset_top = -117.0
+offset_right = 5.0
+offset_bottom = -7.0
+theme_override_colors/font_color = Color(1, 1, 0.419608, 1)
+theme_override_fonts/font = ExtResource("10_udvc4")
+theme_override_font_sizes/font_size = 8
+text = "SPACE to jump"
 
 [connection signal="body_entered" from="Water/Area2D" to="Water" method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Water/Area2D" to="Water" method="_on_area_2d_body_exited"]
