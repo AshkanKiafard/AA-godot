@@ -379,5 +379,15 @@ theme_override_fonts/font = ExtResource("10_udvc4")
 theme_override_font_sizes/font_size = 8
 text = "SPACE to jump"
 
+[node name="Label2" type="Label" parent="Labels"]
+offset_left = 345.0
+offset_top = -108.0
+offset_right = 589.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(1, 1, 0.419608, 1)
+theme_override_fonts/font = ExtResource("10_udvc4")
+theme_override_font_sizes/font_size = 8
+text = "SHIFT to run"
+
 [connection signal="body_entered" from="Water/Area2D" to="Water" method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Water/Area2D" to="Water" method="_on_area_2d_body_exited"]
