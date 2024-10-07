@@ -10,6 +10,7 @@ size = Vector2(10, 32)
 size = Vector2(12, 32)
 
 [node name="Wall" type="StaticBody2D"]
+scale = Vector2(2.13897, 1.81214)
 script = ExtResource("1_v14o8")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
