@@ -185,7 +185,7 @@ sources/0 = SubResource("TileSetAtlasSource_yfyxc")
 size = Vector2(354, 144.5)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_ln7mi"]
-distance = -52.0
+distance = -50.0
 
 [sub_resource type="Animation" id="Animation_57ao2"]
 length = 0.001

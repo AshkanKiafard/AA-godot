@@ -199,7 +199,7 @@ script = ExtResource("1_34oth")
 position = Vector2(4, -28)
 scale = Vector2(2.03125, 2.03125)
 sprite_frames = SubResource("SpriteFrames_yllr2")
-animation = &"jump"
+animation = &"idle"
 autoplay = "idle"
 script = SubResource("GDScript_57yl5")
 
