@@ -9,7 +9,7 @@ func _on_body_entered(body: Node2D) -> void:
 		body.get_node("CollisionShape2D").queue_free()
 		timer.start()
 	elif body is Slime:
-		get_parent().queue_free()
+		body.queue_free()
 	
 
 func _on_timer_timeout() -> void:

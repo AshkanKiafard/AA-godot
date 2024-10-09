@@ -8,13 +8,13 @@ var jump_count = 0
 signal stamina_changed
 var stamina := 0.0 :
 	set(value):
-		var cond = true
-		if value > stamina:
-			cond = is_on_floor()
-		if cond:
-			stamina = clamp(value, -100, 0)
-			stamina_changed.emit()
-		
+		stamina = clamp(value, -100, 0)
+		stamina_changed.emit()
+
+func restore_stamina(value):
+	if is_on_floor():
+		stamina += value
+
 signal oxygen_changed
 var oxygen := 100.0 :
 	set(value):
@@ -26,9 +26,6 @@ var in_water = false
 @onready var game: Node2D = $".."
 
 const FRIENDLY_SLIME = preload("res://scenes/friendly_slime.tscn")
-
-func set_jump_count(value) -> void:
-	jump_count = value
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -49,14 +46,7 @@ func _physics_process(delta: float) -> void:
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var direction := Input.get_axis("move_left", "move_right")
 	animated_sprite.flip_h = false if direction == 1 else true if direction == -1 else animated_sprite.flip_h
-	
-	if is_on_floor():
-		if direction == 0:
-			animated_sprite.play("idle")
-		else:
-			animated_sprite.play("run")
-	else:
-		animated_sprite.play("jump")
+	var player_direction = -1 if animated_sprite.flip_h else 1
 
 	var temp_speed = SPEED
 	if direction:
@@ -64,12 +54,26 @@ func _physics_process(delta: float) -> void:
 			temp_speed += 100 + stamina
 			stamina -= 1
 		else:
-			stamina += 1
+			restore_stamina(1)
 		velocity.x = direction * temp_speed
 	else:
-		stamina += 1
+		restore_stamina(1)
 		velocity.x = move_toward(velocity.x, 0, SPEED)
-	
+		
+	if is_on_floor():
+		if not (animated_sprite.is_playing() and animated_sprite.animation == "roll"):
+			if direction == 0:
+				animated_sprite.play("idle")
+			else:
+				animated_sprite.play("run")
+		else:
+			velocity.x += player_direction * temp_speed
+		if Input.is_action_just_pressed("roll"):
+			stamina -= 75
+			animated_sprite.play("roll")
+	else:
+		animated_sprite.play("jump")
+
 	# handle oxygen
 	if oxygen == 0:
 		print("DEAD no oxygen")
@@ -90,7 +94,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("spawn_sllime"):
 		var f_slime = FRIENDLY_SLIME.instantiate()
 		var player_direction = -1 if animated_sprite.flip_h else 1
-		f_slime.position = Vector2(position.x + player_direction*3, position.y - 20)
+		f_slime.position = Vector2(position.x + player_direction*5, position.y - 20)
 		f_slime.get_node("AnimatedSprite2D").flip_h = animated_sprite.flip_h
 		f_slime.direction = player_direction
 		game.add_child(f_slime)
