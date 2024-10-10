@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://71t4snupia8g"]
+[gd_scene load_steps=40 format=3 uid="uid://71t4snupia8g"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_34oth"]
 [ext_resource type="Texture2D" uid="uid://cq2fk3fjq4x0p" path="res://assets/sprites/knight.png" id="1_418hy"]
@@ -6,6 +6,10 @@
 [ext_resource type="Script" path="res://scripts/stamina_bar.gd" id="3_e0qct"]
 [ext_resource type="Texture2D" uid="uid://o5p2femwjvph" path="res://assets/stamina bar/healthbarProgress.png" id="4_lrslp"]
 [ext_resource type="Script" path="res://scripts/oxygen_bar.gd" id="6_d6d63"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yi8va"]
+atlas = ExtResource("1_418hy")
+region = Rect2(64, 192, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kii50"]
 atlas = ExtResource("1_418hy")
@@ -125,6 +129,14 @@ region = Rect2(224, 96, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_yllr2"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yi8va")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_kii50")
@@ -260,9 +272,8 @@ script = ExtResource("1_34oth")
 position = Vector2(4, -28)
 scale = Vector2(2.03125, 2.03125)
 sprite_frames = SubResource("SpriteFrames_yllr2")
-animation = &"run"
+animation = &"hurt"
 autoplay = "idle"
-frame_progress = 0.852621
 script = SubResource("GDScript_57yl5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -290,3 +301,7 @@ texture_under = ExtResource("3_64smo")
 texture_progress = ExtResource("4_lrslp")
 script = ExtResource("6_d6d63")
 player = NodePath("..")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
