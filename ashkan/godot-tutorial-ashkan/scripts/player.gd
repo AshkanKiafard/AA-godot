@@ -26,6 +26,12 @@ var in_water = false
 @onready var game: Node2D = $".."
 
 const FRIENDLY_SLIME = preload("res://scenes/friendly_slime.tscn")
+@onready var slime_timer: Timer = $SlimeTimer
+signal slime_count_changed
+var slime_count := 3 :
+	set(value):
+		slime_count = clamp(value, 0, 3)
+		slime_count_changed.emit()
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -91,11 +97,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("spawn_sllime"):
+	if event.is_action_pressed("spawn_sllime") && slime_count > 0:
+		slime_count -= 1
 		var f_slime = FRIENDLY_SLIME.instantiate()
 		var player_direction = -1 if animated_sprite.flip_h else 1
 		f_slime.position = Vector2(position.x + player_direction*5, position.y - 20)
 		f_slime.get_node("AnimatedSprite2D").flip_h = animated_sprite.flip_h
 		f_slime.direction = player_direction
 		game.add_child(f_slime)
-		
