@@ -7,13 +7,14 @@ var jump_count = 0
 
 @onready var timer: Timer = $Timer
 
+signal health_changed
 var health := 100 :
 	set(value):
 		if value < health:
 			timer.start()
 			animated_sprite.play("hurt")
 		health = clamp(value, 0, 100)
-		print(health)
+		health_changed.emit()
 
 signal stamina_changed
 var stamina := 0.0 :
