@@ -5,13 +5,23 @@ const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
 var jump_count = 0
 
-@onready var timer: Timer = $Timer
+@onready var death_timer: Timer = $DeathTimer
+@onready var hurt_audio: AudioStreamPlayer2D = $HurtAudio
+@onready var hurt_timer: Timer = $HurtTimer
+@onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 
 signal health_changed
 var health := 100 :
 	set(value):
+		if value <= 0 and health > 0:
+			print("DEAD")
+			collision_shape_2d.queue_free()
+			Engine.time_scale = 0.5
+			death_timer.start()
 		if value < health:
-			timer.start()
+			if not in_water:
+				hurt_audio.play()
+			hurt_timer.start()
 			animated_sprite.play("hurt")
 		health = clamp(value, 0, 100)
 		health_changed.emit()
@@ -77,7 +87,7 @@ func _physics_process(delta: float) -> void:
 		restore_stamina(1)
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		
-	if timer.is_stopped():
+	if hurt_timer.is_stopped():
 		if is_on_floor():
 			if not (animated_sprite.is_playing() and animated_sprite.animation == "roll"):
 				if direction == 0:
@@ -94,9 +104,7 @@ func _physics_process(delta: float) -> void:
 
 	# handle oxygen
 	if oxygen == 0:
-		print("DEAD no oxygen")
-		visible = false
-		get_tree().reload_current_scene()
+		health -= 1
 	if in_water:
 		var v_direction := Input.get_axis("move_up", "move_down")
 		if v_direction:
@@ -117,3 +125,8 @@ func _input(event: InputEvent) -> void:
 		f_slime.get_node("AnimatedSprite2D").flip_h = animated_sprite.flip_h
 		f_slime.direction = player_direction
 		game.add_child(f_slime)
+
+
+func _on_death_timer_timeout() -> void:
+	Engine.time_scale = 1
+	get_tree().reload_current_scene()

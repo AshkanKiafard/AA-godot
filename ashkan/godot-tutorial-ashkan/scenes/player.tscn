@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://71t4snupia8g"]
+[gd_scene load_steps=41 format=3 uid="uid://71t4snupia8g"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_34oth"]
 [ext_resource type="Texture2D" uid="uid://cq2fk3fjq4x0p" path="res://assets/sprites/knight.png" id="1_418hy"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/stamina_bar.gd" id="3_e0qct"]
 [ext_resource type="Texture2D" uid="uid://o5p2femwjvph" path="res://assets/stamina bar/healthbarProgress.png" id="4_lrslp"]
 [ext_resource type="Script" path="res://scripts/oxygen_bar.gd" id="6_d6d63"]
+[ext_resource type="AudioStream" uid="uid://ck0c2sagugcyf" path="res://assets/sounds/hurt.wav" id="7_clq1v"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yi8va"]
 atlas = ExtResource("1_418hy")
@@ -302,6 +303,15 @@ texture_progress = ExtResource("4_lrslp")
 script = ExtResource("6_d6d63")
 player = NodePath("..")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="HurtTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="HurtAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_clq1v")
+
+[node name="DeathTimer" type="Timer" parent="."]
+wait_time = 0.666
+one_shot = true
+
+[connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]

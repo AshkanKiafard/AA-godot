@@ -4,6 +4,7 @@ extends CharacterBody2D
 const SPEED = 60
 const JUMP_VELOCITY = -300.0
 var direction = 1
+var in_water = false
 
 @onready var ray_cast_right: RayCast2D = $RayCastRight
 @onready var ray_cast_left: RayCast2D = $RayCastLeft
@@ -13,6 +14,10 @@ func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
+		
+	if in_water:
+		velocity.y /= 1.2
+		
 	move_and_slide()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
