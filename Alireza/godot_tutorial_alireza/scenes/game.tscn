@@ -1,4 +1,4 @@
-[gd_scene load_steps=68 format=4 uid="uid://cuvndsy1sw5y8"]
+[gd_scene load_steps=69 format=4 uid="uid://cuvndsy1sw5y8"]
 
 [ext_resource type="PackedScene" uid="uid://vd63hulqofaf" path="res://scenes/player.tscn" id="1_3pmnr"]
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_7top5"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://omnalpr023fe" path="res://assets/sprites/world_tileset.png" id="2_brkv2"]
 [ext_resource type="PackedScene" uid="uid://dpwxmbfva2m0d" path="res://scenes/platform.tscn" id="3_8kvah"]
 [ext_resource type="Texture2D" uid="uid://cdffq757xhmef" path="res://assets/sprites/1.png" id="3_n0m4y"]
+[ext_resource type="PackedScene" uid="uid://b2lgf7qoultpa" path="res://scenes/pause_menu.tscn" id="3_rv2jo"]
 [ext_resource type="PackedScene" uid="uid://dexp4eqlwhgek" path="res://scenes/Coin.tscn" id="4_6fcwk"]
 [ext_resource type="Script" path="res://scripts/water.gd" id="4_6xc84"]
 [ext_resource type="Texture2D" uid="uid://bfjnqkk4lvh2m" path="res://assets/sprites/2.png" id="4_ep0ra"]
@@ -843,6 +844,8 @@ offset_right = 2496.0
 offset_bottom = 145.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("3_rv2jo")]
 
 [node name="Coins" type="Label" parent="CanvasLayer"]
 offset_left = 1099.0
