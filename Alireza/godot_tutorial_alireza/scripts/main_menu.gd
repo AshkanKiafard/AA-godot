@@ -15,6 +15,7 @@ func _process(delta: float) -> void:
 
 func _on_start_pressed() -> void:
 	player.velocity.x = -100
+	player.velocity.y = -300
 	timer.start(1.5)
 	$VBoxContainer/Start.disabled = true
 
