@@ -939,7 +939,7 @@ tile_set = SubResource("TileSet_4bb8p")
 
 [node name="Player" parent="." instance=ExtResource("1_3pmnr")]
 z_index = 5
-position = Vector2(72, -67)
+position = Vector2(62, -371)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(1, -9)

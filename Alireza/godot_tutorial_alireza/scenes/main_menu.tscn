@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=4 uid="uid://dcb3886ahpw4"]
+[gd_scene load_steps=12 format=4 uid="uid://dcb3886ahpw4"]
 
 [ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_6rbi0"]
 [ext_resource type="FontFile" uid="uid://d2l41whmcmai3" path="res://assets/fonts/PixelOperator8.ttf" id="1_a33is"]
+[ext_resource type="PackedScene" uid="uid://ep4ieenyfri7" path="res://scenes/menu_player.tscn" id="2_3yty8"]
 [ext_resource type="PackedScene" uid="uid://buiukc2sqihb2" path="res://scenes/slime.tscn" id="3_j457n"]
 [ext_resource type="Texture2D" uid="uid://omnalpr023fe" path="res://assets/sprites/world_tileset.png" id="3_vqhtu"]
 [ext_resource type="Shader" path="res://shaders/rain.gdshader" id="4_7j2f8"]
@@ -297,6 +298,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6rbi0")
 
+[node name="menu_player" parent="." instance=ExtResource("2_3yty8")]
+z_index = 5
+position = Vector2(817, 393)
+scale = Vector2(2, 2)
+
 [node name="Labels" type="Node" parent="."]
 
 [node name="Developer" type="Label" parent="Labels"]
@@ -381,6 +387,10 @@ theme_override_fonts/font = ExtResource("1_a33is")
 theme_override_font_sizes/font_size = 24
 text = "Quit"
 
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/Options" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="VBoxContainer/Quit" to="." method="_on_quit_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

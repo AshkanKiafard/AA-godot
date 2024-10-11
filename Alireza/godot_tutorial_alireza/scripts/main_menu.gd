@@ -1,5 +1,7 @@
 extends Control
 
+@onready var player: CharacterBody2D = $menu_player
+@onready var timer: Timer = $Timer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -12,7 +14,9 @@ func _process(delta: float) -> void:
 
 
 func _on_start_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/game.tscn")
+	player.velocity.x = -100
+	timer.start(1.5)
+	$VBoxContainer/Start.disabled = true
 
 
 func _on_options_pressed() -> void:
@@ -21,3 +25,7 @@ func _on_options_pressed() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_timer_timeout() -> void:
+	get_tree().change_scene_to_file("res://scenes/game.tscn")
