@@ -1,4 +1,4 @@
-[gd_scene load_steps=69 format=4 uid="uid://cuvndsy1sw5y8"]
+[gd_scene load_steps=68 format=4 uid="uid://cuvndsy1sw5y8"]
 
 [ext_resource type="PackedScene" uid="uid://vd63hulqofaf" path="res://scenes/player.tscn" id="1_3pmnr"]
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_7top5"]
@@ -26,7 +26,6 @@
 [ext_resource type="Texture2D" uid="uid://dn88kki704hpy" path="res://assets/sprites/HearTile/Cuore6.png" id="13_56hi1"]
 [ext_resource type="Texture2D" uid="uid://ddoe0s62lnihc" path="res://assets/sprites/HearTile/Cuore7.png" id="14_m6tf1"]
 [ext_resource type="Texture2D" uid="uid://dcs1t2kqbq0pw" path="res://assets/sprites/HearTile/Cuore8.png" id="15_qjn4b"]
-[ext_resource type="Script" path="res://scripts/button.gd" id="16_c887l"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sou2y"]
 shader = ExtResource("1_f4hti")
@@ -893,16 +892,6 @@ scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_jwwjk")
 autoplay = "default"
 
-[node name="RestartButton" type="Button" parent="CanvasLayer"]
-offset_left = 521.0
-offset_top = 53.0
-offset_right = 607.0
-offset_bottom = 81.0
-theme_override_fonts/font = ExtResource("7_042qe")
-theme_override_font_sizes/font_size = 8
-text = "Restart"
-script = ExtResource("16_c887l")
-
 [node name="GameManager" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("1_7top5")
@@ -950,7 +939,7 @@ tile_set = SubResource("TileSet_4bb8p")
 
 [node name="Player" parent="." instance=ExtResource("1_3pmnr")]
 z_index = 5
-position = Vector2(66, 58)
+position = Vector2(72, -67)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(1, -9)
@@ -1212,6 +1201,5 @@ theme_override_fonts/font = ExtResource("7_042qe")
 theme_override_font_sizes/font_size = 8
 text = "Just Kidding :P"
 
-[connection signal="pressed" from="CanvasLayer/RestartButton" to="CanvasLayer/RestartButton" method="_on_pressed"]
 [connection signal="body_entered" from="Water/Area2D" to="Water" method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Water/Area2D" to="Water" method="_on_area_2d_body_exited"]
