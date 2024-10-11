@@ -1,7 +1,9 @@
-[gd_scene load_steps=64 format=4 uid="uid://cuvndsy1sw5y8"]
+[gd_scene load_steps=68 format=4 uid="uid://cuvndsy1sw5y8"]
 
 [ext_resource type="PackedScene" uid="uid://vd63hulqofaf" path="res://scenes/player.tscn" id="1_3pmnr"]
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_7top5"]
+[ext_resource type="Shader" path="res://shaders/rain.gdshader" id="1_f4hti"]
+[ext_resource type="Shader" path="res://shaders/snow.gdshader" id="2_6qisr"]
 [ext_resource type="Texture2D" uid="uid://omnalpr023fe" path="res://assets/sprites/world_tileset.png" id="2_brkv2"]
 [ext_resource type="PackedScene" uid="uid://dpwxmbfva2m0d" path="res://scenes/platform.tscn" id="3_8kvah"]
 [ext_resource type="Texture2D" uid="uid://cdffq757xhmef" path="res://assets/sprites/1.png" id="3_n0m4y"]
@@ -24,6 +26,24 @@
 [ext_resource type="Texture2D" uid="uid://ddoe0s62lnihc" path="res://assets/sprites/HearTile/Cuore7.png" id="14_m6tf1"]
 [ext_resource type="Texture2D" uid="uid://dcs1t2kqbq0pw" path="res://assets/sprites/HearTile/Cuore8.png" id="15_qjn4b"]
 [ext_resource type="Script" path="res://scripts/button.gd" id="16_c887l"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sou2y"]
+shader = ExtResource("1_f4hti")
+shader_parameter/count = 150
+shader_parameter/slant = -0.01
+shader_parameter/speed = 50.0
+shader_parameter/blur = 0.002
+shader_parameter/colour = Color(1, 1, 1, 1)
+shader_parameter/size = Vector2(0.005, 0.2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j2pcp"]
+shader = ExtResource("2_6qisr")
+shader_parameter/count = 500
+shader_parameter/slant = -0.02
+shader_parameter/speed = 15.0
+shader_parameter/blur = 0.01
+shader_parameter/colour = Color(1, 1, 1, 1)
+shader_parameter/size = Vector2(0.01, 0.01)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y0op7"]
 atlas = ExtResource("10_cxdpr")
@@ -803,6 +823,24 @@ _data = {
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_g6v4p"]
 
 [node name="Game" type="Node2D"]
+
+[node name="Weather" type="Node" parent="."]
+
+[node name="Rain" type="ColorRect" parent="Weather"]
+z_index = 1
+material = SubResource("ShaderMaterial_sou2y")
+offset_left = -669.0
+offset_top = -459.0
+offset_right = 1835.0
+offset_bottom = 128.0
+
+[node name="Snow" type="ColorRect" parent="Weather"]
+z_index = 1
+material = SubResource("ShaderMaterial_j2pcp")
+offset_left = 1776.0
+offset_top = -460.0
+offset_right = 2496.0
+offset_bottom = 145.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
