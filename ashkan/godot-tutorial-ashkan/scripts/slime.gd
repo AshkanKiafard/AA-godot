@@ -13,7 +13,8 @@ var in_water = false
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
-		velocity += get_gravity() * delta
+		var gravity = get_gravity() if not in_water else get_gravity() / 2
+		velocity += gravity * delta
 		
 	if in_water:
 		velocity.y /= 1.2

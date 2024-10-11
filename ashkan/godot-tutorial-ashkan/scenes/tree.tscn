@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://7t6p6bk3b58d"]
+
+[ext_resource type="Script" path="res://scripts/tree.gd" id="1_p45a3"]
+[ext_resource type="Texture2D" uid="uid://ck8dkggpmhtag" path="res://assets/sprites/world_tileset.png" id="2_jgoqe"]
+
+[node name="Tree" type="Node2D" node_paths=PackedStringArray("spawn_points")]
+script = ExtResource("1_p45a3")
+spawn_points = [NodePath("SpawnPoint1"), NodePath("SpawnPoint2"), NodePath("SpawnPoint3")]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_jgoqe")
+region_enabled = true
+region_rect = Rect2(0, 48, 16, 48)
+
+[node name="SpawnPoint1" type="Node2D" parent="."]
+position = Vector2(-3, -7)
+
+[node name="SpawnPoint2" type="Node2D" parent="."]
+position = Vector2(3, -2)
+
+[node name="SpawnPoint3" type="Node2D" parent="."]
+position = Vector2(-3, 6)

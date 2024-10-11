@@ -13,18 +13,19 @@ var jump_count = 0
 signal health_changed
 var health := 100 :
 	set(value):
-		if value <= 0 and health > 0:
-			print("DEAD")
-			collision_shape_2d.queue_free()
-			Engine.time_scale = 0.5
-			death_timer.start()
-		if value < health:
-			if not in_water:
-				hurt_audio.play()
-			hurt_timer.start()
-			animated_sprite.play("hurt")
-		health = clamp(value, 0, 100)
-		health_changed.emit()
+		if not is_rolling():
+			if value <= 0 and health > 0:
+				print("DEAD")
+				collision_shape_2d.queue_free()
+				Engine.time_scale = 0.5
+				death_timer.start()
+			if value < health:
+				if not in_water:
+					hurt_audio.play()
+				hurt_timer.start()
+				animated_sprite.play("hurt")
+			health = clamp(value, 0, 100)
+			health_changed.emit()
 
 signal stamina_changed
 var stamina := 0.0 :
@@ -89,14 +90,14 @@ func _physics_process(delta: float) -> void:
 		
 	if hurt_timer.is_stopped():
 		if is_on_floor():
-			if not (animated_sprite.is_playing() and animated_sprite.animation == "roll"):
+			if not is_rolling():
 				if direction == 0:
 					animated_sprite.play("idle")
 				else:
 					animated_sprite.play("run")
 			else:
 				velocity.x += player_direction * temp_speed
-			if Input.is_action_just_pressed("roll"):
+			if Input.is_action_just_pressed("roll") and stamina > -25:
 				stamina -= 75
 				animated_sprite.play("roll")
 		else:
@@ -130,3 +131,6 @@ func _input(event: InputEvent) -> void:
 func _on_death_timer_timeout() -> void:
 	Engine.time_scale = 1
 	get_tree().reload_current_scene()
+	
+func is_rolling():
+	return animated_sprite.is_playing() and animated_sprite.animation == "roll"

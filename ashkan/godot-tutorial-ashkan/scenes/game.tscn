@@ -14,10 +14,10 @@
 [ext_resource type="PackedScene" uid="uid://dpg7qubpurb8a" path="res://scenes/spawner.tscn" id="6_qq1ei"]
 [ext_resource type="PackedScene" uid="uid://cwdi32g5jp1pm" path="res://scenes/wall.tscn" id="6_w270a"]
 [ext_resource type="PackedScene" uid="uid://bp7hd728alk1x" path="res://scenes/mushroom.tscn" id="7_6bq2a"]
-[ext_resource type="PackedScene" uid="uid://dxwyt3p8gaxwi" path="res://scenes/health_fruit.tscn" id="8_ml3oc"]
-[ext_resource type="PackedScene" uid="uid://ivexieocbyq" path="res://scenes/stamina_fruit.tscn" id="9_pe6rd"]
 [ext_resource type="PackedScene" uid="uid://d2gla5pgvk0jp" path="res://scenes/slime.tscn" id="9_xkmy2"]
+[ext_resource type="PackedScene" uid="uid://dxwyt3p8gaxwi" path="res://scenes/fruit.tscn" id="10_llfw7"]
 [ext_resource type="FontFile" uid="uid://tbnutu3g2a37" path="res://assets/fonts/PixelOperator8.ttf" id="10_udvc4"]
+[ext_resource type="PackedScene" uid="uid://7t6p6bk3b58d" path="res://scenes/tree.tscn" id="11_fxt8q"]
 [ext_resource type="PackedScene" uid="uid://jqppaxysymqn" path="res://scenes/slime_bar.tscn" id="13_4xcei"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0s06q"]
@@ -432,14 +432,19 @@ node = NodePath("..")
 
 [node name="Fruits" type="Node" parent="."]
 
-[node name="HealthFruit" parent="Fruits" instance=ExtResource("8_ml3oc")]
-position = Vector2(-263, -136)
+[node name="Fruit" parent="Fruits" instance=ExtResource("10_llfw7")]
+position = Vector2(-245, -137)
+type = 1
 
-[node name="HealthFruit2" parent="Fruits" instance=ExtResource("8_ml3oc")]
-position = Vector2(-246, -136)
+[node name="Fruit2" parent="Fruits" instance=ExtResource("10_llfw7")]
+position = Vector2(-265, -137)
+type = 1
 
-[node name="StaminaFruit2" parent="Fruits" instance=ExtResource("9_pe6rd")]
-position = Vector2(562, -71)
+[node name="Fruit3" parent="Fruits" instance=ExtResource("10_llfw7")]
+position = Vector2(560, -70)
+
+[node name="Tree" parent="Fruits" instance=ExtResource("11_fxt8q")]
+position = Vector2(401, -81)
 
 [node name="Mid" type="TileMapLayer" parent="."]
 position = Vector2(-247, -58)
