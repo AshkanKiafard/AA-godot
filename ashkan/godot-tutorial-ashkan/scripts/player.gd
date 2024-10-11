@@ -5,6 +5,17 @@ const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
 var jump_count = 0
 
+@onready var timer: Timer = $Timer
+
+signal health_changed
+var health := 100 :
+	set(value):
+		if value < health:
+			timer.start()
+			animated_sprite.play("hurt")
+		health = clamp(value, 0, 100)
+		health_changed.emit()
+
 signal stamina_changed
 var stamina := 0.0 :
 	set(value):
@@ -26,6 +37,12 @@ var in_water = false
 @onready var game: Node2D = $".."
 
 const FRIENDLY_SLIME = preload("res://scenes/friendly_slime.tscn")
+@onready var slime_timer: Timer = $SlimeTimer
+signal slime_count_changed
+var slime_count := 3 :
+	set(value):
+		slime_count = clamp(value, 0, 3)
+		slime_count_changed.emit()
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -60,19 +77,20 @@ func _physics_process(delta: float) -> void:
 		restore_stamina(1)
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		
-	if is_on_floor():
-		if not (animated_sprite.is_playing() and animated_sprite.animation == "roll"):
-			if direction == 0:
-				animated_sprite.play("idle")
+	if timer.is_stopped():
+		if is_on_floor():
+			if not (animated_sprite.is_playing() and animated_sprite.animation == "roll"):
+				if direction == 0:
+					animated_sprite.play("idle")
+				else:
+					animated_sprite.play("run")
 			else:
-				animated_sprite.play("run")
+				velocity.x += player_direction * temp_speed
+			if Input.is_action_just_pressed("roll"):
+				stamina -= 75
+				animated_sprite.play("roll")
 		else:
-			velocity.x += player_direction * temp_speed
-		if Input.is_action_just_pressed("roll"):
-			stamina -= 75
-			animated_sprite.play("roll")
-	else:
-		animated_sprite.play("jump")
+			animated_sprite.play("jump")
 
 	# handle oxygen
 	if oxygen == 0:
@@ -91,11 +109,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("spawn_sllime"):
+	if event.is_action_pressed("spawn_sllime") && slime_count > 0:
+		slime_count -= 1
 		var f_slime = FRIENDLY_SLIME.instantiate()
 		var player_direction = -1 if animated_sprite.flip_h else 1
 		f_slime.position = Vector2(position.x + player_direction*5, position.y - 20)
 		f_slime.get_node("AnimatedSprite2D").flip_h = animated_sprite.flip_h
 		f_slime.direction = player_direction
 		game.add_child(f_slime)
-		

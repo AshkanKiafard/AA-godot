@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://dxwyt3p8gaxwi"]
+
+[ext_resource type="Script" path="res://scripts/health_fruit.gd" id="1_x1g5l"]
+[ext_resource type="Texture2D" uid="uid://d4doh2b8eo6ru" path="res://assets/sprites/fruit.png" id="2_upvgg"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ys63r"]
+radius = 5.0
+
+[node name="HealthFruit" type="Area2D"]
+collision_mask = 2
+script = ExtResource("1_x1g5l")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_upvgg")
+region_enabled = true
+region_rect = Rect2(0, 50, 16, 14)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("CircleShape2D_ys63r")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -1,0 +1,115 @@
+[gd_scene load_steps=13 format=3 uid="uid://jqppaxysymqn"]
+
+[ext_resource type="Texture2D" uid="uid://c25gd3ustp38i" path="res://assets/sprites/slime_purple.png" id="1_4hm4x"]
+[ext_resource type="Script" path="res://scripts/slime_bar.gd" id="1_np2vi"]
+[ext_resource type="FontFile" uid="uid://c2bhklmtfwu7o" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_cw0mc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tswd4"]
+atlas = ExtResource("1_4hm4x")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lly0k"]
+atlas = ExtResource("1_4hm4x")
+region = Rect2(24, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8r5sc"]
+atlas = ExtResource("1_4hm4x")
+region = Rect2(48, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cxw5h"]
+atlas = ExtResource("1_4hm4x")
+region = Rect2(72, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cncdf"]
+atlas = ExtResource("1_4hm4x")
+region = Rect2(0, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hwu4r"]
+atlas = ExtResource("1_4hm4x")
+region = Rect2(24, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7nh0w"]
+atlas = ExtResource("1_4hm4x")
+region = Rect2(48, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c5abq"]
+atlas = ExtResource("1_4hm4x")
+region = Rect2(72, 24, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_emj5d"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tswd4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lly0k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8r5sc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cxw5h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cncdf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hwu4r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7nh0w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c5abq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cncdf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cxw5h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8r5sc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lly0k")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[node name="SlimeBar" type="Node2D"]
+scale = Vector2(3, 3)
+script = ExtResource("1_np2vi")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+offset_right = 20.0
+offset_bottom = 20.0
+fill_mode = 3
+show_percentage = false
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="ProgressBar"]
+show_behind_parent = true
+position = Vector2(10, 4.33333)
+sprite_frames = SubResource("SpriteFrames_emj5d")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.871476
+
+[node name="Label" type="Label" parent="."]
+offset_left = -3.0
+offset_top = -1.0
+offset_right = 37.0
+offset_bottom = 22.0
+theme_override_colors/font_color = Color(0.590821, 0.260282, 0.630195, 1)
+theme_override_fonts/font = ExtResource("2_cw0mc")
+theme_override_font_sizes/font_size = 8
+text = "0"
+
+[node name="SlimeTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[connection signal="timeout" from="SlimeTimer" to="." method="_on_slime_timer_timeout"]
