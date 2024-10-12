@@ -29,6 +29,9 @@ var recovery_timer = 0.0
 
 # References
 @onready var animation_sprite = $AnimatedSprite2D
+@onready var health_bar: ProgressBar = $"../CanvasLayer/HealthBar"
+@onready var stamina_bar: ProgressBar = $"../CanvasLayer/StaminaBar"
+@onready var oxygen_bar: ProgressBar = $"../CanvasLayer/OxygenBar"
 
 func _physics_process(delta: float) -> void:
 	var current_speed = SPEED
@@ -67,6 +70,8 @@ func _physics_process(delta: float) -> void:
 		if current_stamina > 0:
 			stamina_depleted = false
 			recovery_timer = 0.0
+			
+	stamina_bar.value = current_stamina
 
 	# Oxygen depletion and swimming control
 	if is_in_water:
@@ -87,6 +92,8 @@ func _physics_process(delta: float) -> void:
 			if current_oxygen > max_oxygen:
 				current_oxygen = max_oxygen
 		oxygen_depleted = false
+		
+	oxygen_bar.value = current_oxygen
 
 	# Handle jumping
 	if not is_on_floor():

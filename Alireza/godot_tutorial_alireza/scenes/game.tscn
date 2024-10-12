@@ -162,6 +162,10 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.0142752, 0.0142752, 0.0142752, 1)
+border_blend = true
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_detail = 9
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j5pyb"]
 bg_color = Color(0.593945, 0.981072, 0.165405, 1)
@@ -170,6 +174,9 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.0142752, 0.0142752, 0.0142752, 1)
+border_blend = true
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j32lv"]
 bg_color = Color(0, 0.839216, 0.956863, 1)
@@ -178,6 +185,9 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.0253638, 0.0253638, 0.0253638, 1)
+border_blend = true
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xv0my"]
 texture = ExtResource("2_brkv2")
@@ -881,7 +891,7 @@ texture = ExtResource("8_e313l")
 [node name="StaminaBar" type="ProgressBar" parent="CanvasLayer"]
 offset_left = 30.0
 offset_top = 36.0
-offset_right = 301.0
+offset_right = 297.0
 offset_bottom = 62.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_j5pyb")
 step = 1.0
@@ -896,7 +906,7 @@ texture = ExtResource("12_w8d0b")
 [node name="OxygenBar" type="ProgressBar" parent="CanvasLayer"]
 offset_left = 30.0
 offset_top = 62.0
-offset_right = 235.0
+offset_right = 232.0
 offset_bottom = 88.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_j32lv")
 step = 1.0
