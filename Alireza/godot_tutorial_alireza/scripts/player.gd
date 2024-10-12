@@ -5,11 +5,25 @@ const SPEED = 100.0
 const RUN_SPEED = 180.0
 const SLOWED_SPEED = 60.0
 const JUMP_VELOCITY = -250.0
+const ROLL_SPEED = 200.0
+const ROLL_COST = 20.0
 const SLOWED_JUMP_VELOCITY = -150.0
 const STAMINA_DEPLETION_RATE = 20
 const STAMINA_RECOVERY_RATE = 20
 const JUMP_STAMINA_COST = 20.0
 const RECOVERY_DELAY = 0.5
+const ROLL_DURATION = 0.5
+
+# Health variables
+var MAX_HEALTH = 100.0
+var current_health = MAX_HEALTH
+
+# Stamina variables
+var stamina_depleted = false
+var jumps_left = 2
+var max_stamina = 100.0
+var current_stamina = max_stamina
+var recovery_timer = 0.0
 
 # Oxygen related variables
 var max_oxygen = 100.0
@@ -20,12 +34,10 @@ var oxygen_depleted = false
 var is_in_water = false
 var swim_speed = 50.0
 
-# Stamina variables
-var stamina_depleted = false
-var jumps_left = 2
-var max_stamina = 100.0
-var current_stamina = max_stamina
-var recovery_timer = 0.0
+# Roll
+var is_invulnerable = false
+var is_rolling = false
+var roll_timer = 0.0
 
 # References
 @onready var animation_sprite = $AnimatedSprite2D
@@ -36,6 +48,29 @@ var recovery_timer = 0.0
 func _physics_process(delta: float) -> void:
 	var current_speed = SPEED
 	var current_jump_velocity = JUMP_VELOCITY
+
+	# Roll handling
+	if is_rolling:
+		roll_timer += delta
+		if roll_timer >= ROLL_DURATION:
+			is_rolling = false
+			is_invulnerable = false
+			roll_timer = 0.0
+		else:
+			velocity.x = Input.get_axis("ui_left", "ui_right") * ROLL_SPEED
+			animation_sprite.play("roll")
+			move_and_slide()
+			return 
+
+	if Input.is_action_just_pressed("ui_down") and not stamina_depleted and not is_rolling and is_on_floor():
+		if current_stamina >= ROLL_COST:
+			current_stamina -= ROLL_COST
+			is_rolling = true
+			is_invulnerable = true
+			velocity.x = Input.get_axis("ui_left", "ui_right") * ROLL_SPEED
+			animation_sprite.play("roll")
+		else:
+			return
 
 	# Handle running and stamina depletion
 	if Input.is_physical_key_pressed(KEY_SHIFT) and current_stamina > 0:
@@ -75,7 +110,6 @@ func _physics_process(delta: float) -> void:
 
 	# Oxygen depletion and swimming control
 	if is_in_water:
-		# Swimming in water (free movement)
 		current_speed = swim_speed
 		velocity.y = move_toward(velocity.y, 0, swim_speed * delta)
 		
@@ -84,7 +118,6 @@ func _physics_process(delta: float) -> void:
 		if current_oxygen <= 0:
 			current_oxygen = 0
 			oxygen_depleted = true
-			# Handle drowning or other effects here
 	else:
 		# Recover oxygen when out of water
 		if current_oxygen < max_oxygen:
@@ -138,6 +171,19 @@ func _physics_process(delta: float) -> void:
 		animation_sprite.play("jump")
 
 	move_and_slide()
-
+	
 func set_in_water(in_water: bool) -> void:
 	is_in_water = in_water
+	
+func decrease_health(amount: float) -> void:
+	if not is_invulnerable:
+		current_health -= amount
+		if current_health < 0:
+			current_health = 0
+		health_bar.value = current_health
+
+func increase_health(amount: float) -> void:
+	current_health += amount
+	if current_health > MAX_HEALTH:
+		current_health = MAX_HEALTH
+	health_bar.value = current_health
