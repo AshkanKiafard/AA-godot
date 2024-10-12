@@ -7,10 +7,9 @@ var elapsed_time = 0.0
 @onready var score_label = $ScoreLabel
 @onready var coins: Label = $"../CanvasLayer/Coins"
 @onready var time: Label = $"../CanvasLayer/Time"
-@onready var health: Label = $"../CanvasLayer/Status"
 
 func _ready() -> void:
-	update_lives()
+	pass
 
 func _process(delta: float) -> void:
 	elapsed_time += delta
@@ -29,12 +28,3 @@ func format_time(time: float) -> String:
 	var secs = int(time) % 60
 	var mili = int((time - int(time)) * 100)
 	return str("%0*d" % [2, mins]) + ":" + str("%0*d" % [2, secs]) + ":" + str("%0*d" % [2, mili])
-
-func reduce_life() -> void:
-	lives -= 1
-	update_lives()
-	if lives <= 0:
-		pass
-
-func update_lives():
-	health.text = str(lives)

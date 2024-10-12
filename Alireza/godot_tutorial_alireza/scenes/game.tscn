@@ -1,4 +1,4 @@
-[gd_scene load_steps=68 format=4 uid="uid://cuvndsy1sw5y8"]
+[gd_scene load_steps=65 format=4 uid="uid://cuvndsy1sw5y8"]
 
 [ext_resource type="PackedScene" uid="uid://vd63hulqofaf" path="res://scenes/player.tscn" id="1_3pmnr"]
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_7top5"]
@@ -18,14 +18,9 @@
 [ext_resource type="Texture2D" uid="uid://c11bhqlec012k" path="res://assets/sprites/5.png" id="7_5f5w0"]
 [ext_resource type="FontFile" uid="uid://d2l41whmcmai3" path="res://assets/fonts/PixelOperator8.ttf" id="7_042qe"]
 [ext_resource type="Texture2D" uid="uid://cujndki8tcrqt" path="res://assets/sprites/HearTile/Cuore1.png" id="8_e313l"]
-[ext_resource type="Texture2D" uid="uid://00p1su5h8sw8" path="res://assets/sprites/HearTile/Cuore2.png" id="9_5fbol"]
 [ext_resource type="Texture2D" uid="uid://cmkt01367oq4a" path="res://assets/sprites/coin.png" id="10_cxdpr"]
-[ext_resource type="Texture2D" uid="uid://drfwwnry6eg7" path="res://assets/sprites/HearTile/Cuore3.png" id="10_js5ck"]
-[ext_resource type="Texture2D" uid="uid://xynch7knfv8a" path="res://assets/sprites/HearTile/Cuore4.png" id="11_4fino"]
-[ext_resource type="Texture2D" uid="uid://r6bhetknfnpg" path="res://assets/sprites/HearTile/Cuore5.png" id="12_8niok"]
-[ext_resource type="Texture2D" uid="uid://dn88kki704hpy" path="res://assets/sprites/HearTile/Cuore6.png" id="13_56hi1"]
-[ext_resource type="Texture2D" uid="uid://ddoe0s62lnihc" path="res://assets/sprites/HearTile/Cuore7.png" id="14_m6tf1"]
-[ext_resource type="Texture2D" uid="uid://dcs1t2kqbq0pw" path="res://assets/sprites/HearTile/Cuore8.png" id="15_qjn4b"]
+[ext_resource type="Texture2D" uid="uid://g1src3fjuayk" path="res://assets/sprites/flash.png" id="12_w8d0b"]
+[ext_resource type="Texture2D" uid="uid://dvofvbonvv7v1" path="res://assets/sprites/bubble.png" id="13_b517y"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sou2y"]
 shader = ExtResource("1_f4hti")
@@ -160,37 +155,29 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_jwwjk"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("8_e313l")
-}, {
-"duration": 1.0,
-"texture": ExtResource("9_5fbol")
-}, {
-"duration": 1.0,
-"texture": ExtResource("10_js5ck")
-}, {
-"duration": 1.0,
-"texture": ExtResource("11_4fino")
-}, {
-"duration": 1.0,
-"texture": ExtResource("12_8niok")
-}, {
-"duration": 1.0,
-"texture": ExtResource("13_56hi1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("14_m6tf1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("15_qjn4b")
-}],
-"loop": true,
-"name": &"default",
-"speed": 10.0
-}]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ah7x"]
+bg_color = Color(0.988235, 0, 0.0392157, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.0142752, 0.0142752, 0.0142752, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j5pyb"]
+bg_color = Color(0.593945, 0.981072, 0.165405, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.0142752, 0.0142752, 0.0142752, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j32lv"]
+bg_color = Color(0, 0.839216, 0.956863, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.0253638, 0.0253638, 0.0253638, 1)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xv0my"]
 texture = ExtResource("2_brkv2")
@@ -854,19 +841,10 @@ theme_override_fonts/font = ExtResource("7_042qe")
 theme_override_font_sizes/font_size = 24
 text = "0"
 
-[node name="Status" type="Label" parent="CanvasLayer"]
-offset_left = 40.0
-offset_top = 9.0
-offset_right = 216.0
-offset_bottom = 39.0
-theme_override_fonts/font = ExtResource("7_042qe")
-theme_override_font_sizes/font_size = 24
-text = "0"
-
 [node name="Time" type="Label" parent="CanvasLayer"]
-offset_left = 497.0
+offset_left = 514.0
 offset_top = 12.0
-offset_right = 653.0
+offset_right = 670.0
 offset_bottom = 36.0
 theme_override_fonts/font = ExtResource("7_042qe")
 theme_override_font_sizes/font_size = 24
@@ -879,17 +857,56 @@ sprite_frames = SubResource("SpriteFrames_da0nq")
 autoplay = "default"
 
 [node name="AnimatedSprite2D_Clock" type="AnimatedSprite2D" parent="CanvasLayer"]
-position = Vector2(481, 22)
+position = Vector2(496, 22)
 scale = Vector2(0.07, 0.07)
 sprite_frames = SubResource("SpriteFrames_tp050")
 autoplay = "default"
 frame_progress = 0.0840456
 
-[node name="AnimatedSprite2D_Heart" type="AnimatedSprite2D" parent="CanvasLayer"]
-position = Vector2(20, 20)
-scale = Vector2(1.5, 1.5)
-sprite_frames = SubResource("SpriteFrames_jwwjk")
-autoplay = "default"
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 31.0
+offset_top = 10.0
+offset_right = 370.0
+offset_bottom = 36.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_8ah7x")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="Heart" type="Sprite2D" parent="CanvasLayer/HealthBar"]
+position = Vector2(-1, 12)
+scale = Vector2(1.7, 1.7)
+texture = ExtResource("8_e313l")
+
+[node name="StaminaBar" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 30.0
+offset_top = 36.0
+offset_right = 301.0
+offset_bottom = 62.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_j5pyb")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="Flash" type="Sprite2D" parent="CanvasLayer/StaminaBar"]
+position = Vector2(-1, 13)
+scale = Vector2(0.045, 0.045)
+texture = ExtResource("12_w8d0b")
+
+[node name="OxygenBar" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 30.0
+offset_top = 62.0
+offset_right = 235.0
+offset_bottom = 88.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_j32lv")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="Bubble" type="Sprite2D" parent="CanvasLayer/OxygenBar"]
+position = Vector2(-1, 14)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("13_b517y")
 
 [node name="GameManager" type="Node" parent="."]
 unique_name_in_owner = true

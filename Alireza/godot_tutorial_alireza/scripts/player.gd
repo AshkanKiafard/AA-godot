@@ -29,8 +29,6 @@ var recovery_timer = 0.0
 
 # References
 @onready var animation_sprite = $AnimatedSprite2D
-# @onready var oxygen_bar = $OxygenBar
-@onready var stamina_bar = $TextureProgressBar
 
 func _physics_process(delta: float) -> void:
 	var current_speed = SPEED
@@ -133,10 +131,6 @@ func _physics_process(delta: float) -> void:
 		animation_sprite.play("jump")
 
 	move_and_slide()
-
-	# Update stamina and oxygen meters
-	stamina_bar.value = current_stamina
-	#oxygen_bar.value = current_oxygen
 
 func set_in_water(in_water: bool) -> void:
 	is_in_water = in_water

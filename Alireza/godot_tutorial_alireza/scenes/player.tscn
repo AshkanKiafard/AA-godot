@@ -1,10 +1,7 @@
-[gd_scene load_steps=45 format=3 uid="uid://vd63hulqofaf"]
+[gd_scene load_steps=42 format=3 uid="uid://vd63hulqofaf"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_rhgpa"]
 [ext_resource type="Texture2D" uid="uid://c00jtv3k7rt0y" path="res://assets/sprites/knight.png" id="1_syfp4"]
-[ext_resource type="Script" path="res://scripts/stamina_bar.gd" id="2_6iocy"]
-[ext_resource type="Texture2D" uid="uid://vtdvyodkwiuu" path="res://assets/healthbarUnder.png" id="3_xupbs"]
-[ext_resource type="Texture2D" uid="uid://n8pfmo1vncp8" path="res://assets/healthbarProgress.png" id="4_ec3fv"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yuh7x"]
 atlas = ExtResource("1_syfp4")
@@ -315,13 +312,3 @@ autoplay = "idle"
 z_index = 5
 position = Vector2(0, -6)
 shape = SubResource("CircleShape2D_dvx6e")
-
-[node name="TextureProgressBar" type="TextureProgressBar" parent="." node_paths=PackedStringArray("player")]
-offset_left = -33.0
-offset_top = -31.0
-offset_right = 31.0
-offset_bottom = -19.0
-texture_under = ExtResource("3_xupbs")
-texture_progress = ExtResource("4_ec3fv")
-script = ExtResource("2_6iocy")
-player = NodePath("..")
