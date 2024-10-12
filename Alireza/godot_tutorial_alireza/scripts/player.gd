@@ -13,6 +13,7 @@ const STAMINA_RECOVERY_RATE = 20
 const JUMP_STAMINA_COST = 20.0
 const RECOVERY_DELAY = 0.5
 const ROLL_DURATION = 0.5
+const WATER_MOVEMENT_RATE = 0.75
 
 # Health variables
 var MAX_HEALTH = 100.0
@@ -28,11 +29,12 @@ var recovery_timer = 0.0
 # Oxygen related variables
 var max_oxygen = 100.0
 var current_oxygen = max_oxygen
-var oxygen_depletion_rate = 20.0
+var oxygen_depletion_rate = 15.0
 var oxygen_recovery_rate = 30.0
 var oxygen_depleted = false
 var is_in_water = false
-var swim_speed = 50.0
+var SWIM_SPEED = 50.0
+const FAST_SWIM_SPEED = 80.0
 
 # Roll
 var is_invulnerable = false
@@ -62,7 +64,8 @@ func _physics_process(delta: float) -> void:
 			move_and_slide()
 			return 
 
-	if Input.is_action_just_pressed("ui_down") and not stamina_depleted and not is_rolling and is_on_floor():
+	# Allow rolling only when not in water
+	if Input.is_action_just_pressed("ui_down") and not stamina_depleted and not is_rolling and is_on_floor() and not is_in_water:
 		if current_stamina >= ROLL_COST:
 			current_stamina -= ROLL_COST
 			is_rolling = true
@@ -110,8 +113,8 @@ func _physics_process(delta: float) -> void:
 
 	# Oxygen depletion and swimming control
 	if is_in_water:
-		current_speed = swim_speed
-		velocity.y = move_toward(velocity.y, 0, swim_speed * delta)
+		current_speed *= WATER_MOVEMENT_RATE
+		velocity.y = move_toward(velocity.y, 0, current_speed * delta)
 		
 		# Deplete oxygen over time
 		current_oxygen -= oxygen_depletion_rate * delta
@@ -134,7 +137,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		jumps_left = 2
 
-	if Input.is_action_just_pressed("ui_accept") and jumps_left > 0:
+	# Allow jumping only when not in water
+	if Input.is_action_just_pressed("ui_accept") and jumps_left > 0 and not is_in_water:
 		if stamina_depleted:
 			velocity.y = SLOWED_JUMP_VELOCITY
 		elif current_stamina >= JUMP_STAMINA_COST:
@@ -144,13 +148,15 @@ func _physics_process(delta: float) -> void:
 
 	# Handle movement direction
 	var direction = Input.get_axis("ui_left", "ui_right")
+	
 	if is_in_water:
-		# Allow full swimming control (up, down, left, right)
 		var swim_direction_y = Input.get_axis("ui_up", "ui_down")
-		velocity.y = swim_direction_y * swim_speed
-		velocity.x = direction * swim_speed
+		if swim_direction_y:
+			velocity.y = swim_direction_y * (current_speed * WATER_MOVEMENT_RATE)
+		else:
+			velocity.y /= 1.25
+		velocity.x = direction * (current_speed * WATER_MOVEMENT_RATE)
 	else:
-		# Normal movement on land
 		if direction:
 			velocity.x = direction * current_speed
 		else:
