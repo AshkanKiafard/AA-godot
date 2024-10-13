@@ -3,8 +3,15 @@ extends CharacterBody2D
 
 const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
+@onready var x_override_timer: Timer = $XOverrideTimer
+var override_x = false :
+	set(value):
+		override_x = value
+		x_override_timer.start()
+var direction
 var jump_count = 0
 var jump_available = true
+
 @onready var coyote_timer: Timer = $CoyoteTimer
 @onready var death_timer: Timer = $DeathTimer
 @onready var hurt_audio: AudioStreamPlayer2D = $HurtAudio
@@ -63,12 +70,17 @@ func _physics_process(delta: float) -> void:
 		if coyote_timer.is_stopped() and jump_count == 0:
 			coyote_timer.start()
 	else:
+		if not x_override_timer.is_stopped() and x_override_timer.time_left < 1:
+			override_x = false
+			x_override_timer.stop()
 		jump_count = 0
 		jump_available = true
 		coyote_timer.stop()
 
 	# Handle jump.
 	if Input.is_action_just_pressed("jump"):
+		override_x = false
+		x_override_timer.stop()
 		if is_on_floor():
 			jump_count = 0
 		jump_count += 1
@@ -77,8 +89,8 @@ func _physics_process(delta: float) -> void:
 			velocity.y = JUMP_VELOCITY - (stamina * 2)
 
 	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction := Input.get_axis("move_left", "move_right")
+	if not override_x:
+		direction = Input.get_axis("move_left", "move_right")
 	animated_sprite.flip_h = false if direction == 1 else true if direction == -1 else animated_sprite.flip_h
 	var player_direction = -1 if animated_sprite.flip_h else 1
 
@@ -143,3 +155,7 @@ func is_rolling():
 
 func _on_coyote_timer_timeout() -> void:
 	jump_available = false
+
+
+func _on_x_override_timer_timeout() -> void:
+	override_x = false

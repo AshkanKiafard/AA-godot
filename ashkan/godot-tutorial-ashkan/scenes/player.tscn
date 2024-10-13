@@ -319,5 +319,9 @@ one_shot = true
 wait_time = 0.2
 one_shot = true
 
+[node name="XOverrideTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]
 [connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
+[connection signal="timeout" from="XOverrideTimer" to="." method="_on_x_override_timer_timeout"]

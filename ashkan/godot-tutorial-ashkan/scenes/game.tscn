@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=4 uid="uid://dp0inah0y7ntu"]
+[gd_scene load_steps=40 format=4 uid="uid://dp0inah0y7ntu"]
 
 [ext_resource type="PackedScene" uid="uid://71t4snupia8g" path="res://scenes/player.tscn" id="1_h17a3"]
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_lc0pv"]
@@ -324,30 +324,6 @@ _data = {
 "move": SubResource("Animation_kbmlb")
 }
 
-[sub_resource type="GDScript" id="GDScript_amn1m"]
-script/source = "extends StaticBody2D
-
-var multiplier
-
-@onready var jump_sound: AudioStreamPlayer = $JumpSound
-var player_body
-
-func _on_area_2d_body_entered(body: Node2D) -> void:
-	jump_sound.play()
-	if body is Player:
-		multiplier = 5 if body.in_water else 2
-	else:
-		multiplier = 1
-	body.velocity.y = body.JUMP_VELOCITY * multiplier
-	if body is Player:
-		player_body = body
-		body.stamina = 0
-		$Timer.start()
-
-func _on_timer_timeout() -> void:
-	player_body.jump_count = 1
-"
-
 [node name="Game" type="Node2D"]
 
 [node name="UI" type="CanvasLayer" parent="."]
@@ -434,7 +410,6 @@ tile_set = SubResource("TileSet_gvhpq")
 
 [node name="Spawner" parent="." node_paths=PackedStringArray("node") instance=ExtResource("6_qq1ei")]
 node = NodePath("..")
-spawn = true
 
 [node name="Fruits" type="Node" parent="."]
 
@@ -560,15 +535,14 @@ rotation = 3.12901
 [node name="Mushrooms" type="Node2D" parent="."]
 position = Vector2(159, 104)
 
-[node name="Mushroom" parent="Mushrooms" instance=ExtResource("7_6bq2a")]
-position = Vector2(2, 2)
-script = SubResource("GDScript_amn1m")
-
 [node name="Mushroom2" parent="Mushrooms" instance=ExtResource("7_6bq2a")]
 position = Vector2(395, -463)
 
 [node name="Mushroom3" parent="Mushrooms" instance=ExtResource("7_6bq2a")]
 position = Vector2(-201, -174)
+
+[node name="Mushroom" parent="Mushrooms" instance=ExtResource("7_6bq2a")]
+position = Vector2(0, 2)
 
 [node name="Slime" parent="." instance=ExtResource("9_xkmy2")]
 position = Vector2(-158, -69)
