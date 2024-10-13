@@ -18,6 +18,7 @@ func pause():
 
 func restart():
 	resume()
+	Engine.time_scale = 1
 	get_tree().reload_current_scene()
 
 func quit():
