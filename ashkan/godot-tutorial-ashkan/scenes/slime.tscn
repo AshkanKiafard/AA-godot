@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://d2gla5pgvk0jp"]
+[gd_scene load_steps=12 format=3 uid="uid://d2gla5pgvk0jp"]
 
 [ext_resource type="Texture2D" uid="uid://cjfvxrv0g33pj" path="res://assets/sprites/slime_green.png" id="1_8ihfy"]
 [ext_resource type="Script" path="res://scripts/slime.gd" id="1_to7c5"]
@@ -40,6 +40,19 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="GDScript" id="GDScript_8fpyo"]
+script/source = "extends Area2D
+
+@export var damage: int
+
+
+func _on_body_entered(body: CharacterBody2D) -> void:
+	if body is Player:
+		body.health -= damage
+	elif body is Slime:
+		body.queue_free()
+"
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pca4n"]
 size = Vector2(14, 13)
 
@@ -57,6 +70,7 @@ frame_progress = 0.886186
 
 [node name="Killzone" parent="." instance=ExtResource("2_eculx")]
 collision_layer = 4
+script = SubResource("GDScript_8fpyo")
 damage = 30
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]

@@ -434,6 +434,7 @@ tile_set = SubResource("TileSet_gvhpq")
 
 [node name="Spawner" parent="." node_paths=PackedStringArray("node") instance=ExtResource("6_qq1ei")]
 node = NodePath("..")
+spawn = true
 
 [node name="Fruits" type="Node" parent="."]
 

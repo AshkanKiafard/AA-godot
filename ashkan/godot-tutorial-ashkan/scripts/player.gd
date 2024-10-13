@@ -46,7 +46,6 @@ var oxygen := 100.0 :
 var in_water = false
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var game: Node2D = $".."
 
 const FRIENDLY_SLIME = preload("res://scenes/friendly_slime.tscn")
 @onready var slime_timer: Timer = $SlimeTimer
@@ -132,7 +131,7 @@ func _input(event: InputEvent) -> void:
 		f_slime.position = Vector2(position.x + player_direction*5, position.y - 20)
 		f_slime.get_node("AnimatedSprite2D").flip_h = animated_sprite.flip_h
 		f_slime.direction = player_direction
-		game.add_child(f_slime)
+		get_parent().add_child(f_slime)
 
 
 func _on_death_timer_timeout() -> void:

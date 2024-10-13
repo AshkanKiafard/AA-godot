@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=4 uid="uid://eddquu4vcrey"]
+[gd_scene load_steps=9 format=4 uid="uid://eddquu4vcrey"]
 
 [ext_resource type="FontFile" uid="uid://c2bhklmtfwu7o" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="1_2h2bx"]
 [ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_ujd6w"]
 [ext_resource type="Texture2D" uid="uid://ck8dkggpmhtag" path="res://assets/sprites/world_tileset.png" id="2_psisa"]
+[ext_resource type="PackedScene" uid="uid://dp0inah0y7ntu" path="res://scenes/game.tscn" id="2_xjdh0"]
 [ext_resource type="PackedScene" uid="uid://dpg7qubpurb8a" path="res://scenes/spawner.tscn" id="3_stfdr"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1qlt2"]
@@ -184,6 +185,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ujd6w")
+game = ExtResource("2_xjdh0")
 
 [node name="Background" type="TileMapLayer" parent="."]
 position = Vector2(-1044, 836)
@@ -228,6 +230,7 @@ text = "QUIT"
 [node name="Spawner" parent="." node_paths=PackedStringArray("node") instance=ExtResource("3_stfdr")]
 position = Vector2(161, 139)
 node = NodePath("..")
+spawn = true
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0

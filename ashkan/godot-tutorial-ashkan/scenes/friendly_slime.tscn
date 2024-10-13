@@ -1,11 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://ciey1em5uu7y7"]
+[gd_scene load_steps=12 format=3 uid="uid://ciey1em5uu7y7"]
 
 [ext_resource type="Script" path="res://scripts/slime.gd" id="1_02sy6"]
 [ext_resource type="Texture2D" uid="uid://c25gd3ustp38i" path="res://assets/sprites/slime_purple.png" id="2_ymvhj"]
-[ext_resource type="PackedScene" uid="uid://y8vac1mkbgpy" path="res://scenes/killzone.tscn" id="3_i6g7n"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_gells"]
-size = Vector2(14, 13)
+[ext_resource type="PackedScene" uid="uid://y8vac1mkbgpy" path="res://scenes/killzone.tscn" id="3_arr3s"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_oal8b"]
 atlas = ExtResource("2_ymvhj")
@@ -43,6 +40,22 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="GDScript" id="GDScript_iblct"]
+script/source = "extends Area2D
+
+@export var damage: int
+
+
+func _on_body_entered(body: CharacterBody2D) -> void:
+	if body is Player:
+		body.health -= damage
+	elif body is Slime:
+		body.queue_free()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pca4n"]
+size = Vector2(14, 13)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1knha"]
 size = Vector2(12, 1)
 
@@ -50,19 +63,19 @@ size = Vector2(12, 1)
 collision_layer = 2
 script = ExtResource("1_02sy6")
 
-[node name="Killzone" parent="." instance=ExtResource("3_i6g7n")]
-collision_layer = 2
-collision_mask = 4
-damage = 30
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
-position = Vector2(0, 5.5)
-shape = SubResource("RectangleShape2D_gells")
-
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_nc76b")
 autoplay = "default"
 frame_progress = 0.235581
+
+[node name="Killzone" parent="." instance=ExtResource("3_arr3s")]
+collision_layer = 2
+collision_mask = 4
+script = SubResource("GDScript_iblct")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
+position = Vector2(0, 5.5)
+shape = SubResource("RectangleShape2D_pca4n")
 
 [node name="RayCastRight" type="RayCast2D" parent="."]
 position = Vector2(0, 6)
@@ -75,3 +88,5 @@ target_position = Vector2(-10, 0)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 11.5)
 shape = SubResource("RectangleShape2D_1knha")
+
+[connection signal="body_entered" from="Killzone" to="." method="_on_killzone_body_entered"]
