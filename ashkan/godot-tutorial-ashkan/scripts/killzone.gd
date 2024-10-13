@@ -7,4 +7,4 @@ func _on_body_entered(body: CharacterBody2D) -> void:
 	if body is Player:
 		body.health -= damage
 	elif body is Slime:
-		get_parent().queue_free()
+		body.queue_free()

@@ -4,7 +4,8 @@ extends CharacterBody2D
 const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
 var jump_count = 0
-
+var jump_available = true
+@onready var coyote_timer: Timer = $CoyoteTimer
 @onready var death_timer: Timer = $DeathTimer
 @onready var hurt_audio: AudioStreamPlayer2D = $HurtAudio
 @onready var hurt_timer: Timer = $HurtTimer
@@ -60,13 +61,19 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		var gravity = get_gravity() if not in_water else get_gravity() / 2
 		velocity += gravity * delta
+		if coyote_timer.is_stopped() and jump_count == 0:
+			coyote_timer.start()
+	else:
+		jump_count = 0
+		jump_available = true
+		coyote_timer.stop()
 
 	# Handle jump.
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
 			jump_count = 0
 		jump_count += 1
-		if jump_count <= 1 or (jump_count == 2 and stamina > -75):
+		if (jump_count <= 1 and jump_available) or (jump_count == 2 and stamina > -75):
 			stamina -= 25
 			velocity.y = JUMP_VELOCITY - (stamina * 2)
 
@@ -134,3 +141,6 @@ func _on_death_timer_timeout() -> void:
 	
 func is_rolling():
 	return animated_sprite.is_playing() and animated_sprite.animation == "roll"
+
+func _on_coyote_timer_timeout() -> void:
+	jump_available = false
