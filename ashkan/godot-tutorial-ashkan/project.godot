@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 Music="*res://scenes/music.tscn"
 
+[global_group]
+
+Mushroom=""
+
 [input]
 
 jump={

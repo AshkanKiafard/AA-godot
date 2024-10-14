@@ -532,16 +532,16 @@ position = Vector2(1223, -413)
 position = Vector2(1079, -312)
 rotation = 3.12901
 
-[node name="Mushrooms" type="Node2D" parent="."]
+[node name="Mushrooms" type="Node2D" parent="." groups=["Mushroom"]]
 position = Vector2(159, 104)
 
-[node name="Mushroom2" parent="Mushrooms" instance=ExtResource("7_6bq2a")]
+[node name="Mushroom2" parent="Mushrooms" groups=["Mushroom"] instance=ExtResource("7_6bq2a")]
 position = Vector2(395, -463)
 
-[node name="Mushroom3" parent="Mushrooms" instance=ExtResource("7_6bq2a")]
+[node name="Mushroom3" parent="Mushrooms" groups=["Mushroom"] instance=ExtResource("7_6bq2a")]
 position = Vector2(-201, -174)
 
-[node name="Mushroom" parent="Mushrooms" instance=ExtResource("7_6bq2a")]
+[node name="Mushroom" parent="Mushrooms" groups=["Mushroom"] instance=ExtResource("7_6bq2a")]
 position = Vector2(0, 2)
 
 [node name="Slime" parent="." instance=ExtResource("9_xkmy2")]

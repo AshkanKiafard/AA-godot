@@ -1,10 +1,10 @@
+class_name Mushroom
 extends StaticBody2D
 
 var multiplier
 
 @onready var jump_sound: AudioStreamPlayer = $JumpSound
 var player_body
-
 
 func _on_timer_timeout() -> void:
 	player_body.jump_count = 1

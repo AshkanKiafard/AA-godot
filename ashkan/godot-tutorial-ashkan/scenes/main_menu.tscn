@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=4 uid="uid://eddquu4vcrey"]
+[gd_scene load_steps=10 format=4 uid="uid://eddquu4vcrey"]
 
 [ext_resource type="FontFile" uid="uid://c2bhklmtfwu7o" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="1_2h2bx"]
 [ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_ujd6w"]
 [ext_resource type="Texture2D" uid="uid://ck8dkggpmhtag" path="res://assets/sprites/world_tileset.png" id="2_psisa"]
 [ext_resource type="PackedScene" uid="uid://dp0inah0y7ntu" path="res://scenes/game.tscn" id="2_xjdh0"]
 [ext_resource type="PackedScene" uid="uid://dpg7qubpurb8a" path="res://scenes/spawner.tscn" id="3_stfdr"]
+[ext_resource type="PackedScene" uid="uid://bp7hd728alk1x" path="res://scenes/mushroom.tscn" id="6_kvmkk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1qlt2"]
 texture = ExtResource("2_psisa")
@@ -242,6 +243,12 @@ theme_override_colors/font_color = Color(0.796078, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_2h2bx")
 theme_override_font_sizes/font_size = 64
 text = "Slime Slayer"
+
+[node name="Mushroom" parent="." groups=["Mushroom"] instance=ExtResource("6_kvmkk")]
+position = Vector2(283, 235)
+
+[node name="Mushroom2" parent="." groups=["Mushroom"] instance=ExtResource("6_kvmkk")]
+position = Vector2(57, 234)
 
 [connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

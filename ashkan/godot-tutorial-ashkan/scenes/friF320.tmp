@@ -78,18 +78,15 @@ position = Vector2(0, 5.5)
 shape = SubResource("RectangleShape2D_pca4n")
 
 [node name="RayCastRight" type="RayCast2D" parent="."]
-position = Vector2(-2, 6)
-target_position = Vector2(13, 0)
+position = Vector2(0, 6)
+target_position = Vector2(11, 0)
 
 [node name="RayCastLeft" type="RayCast2D" parent="."]
 position = Vector2(0, 6)
-target_position = Vector2(-11, 0)
+target_position = Vector2(-10, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 11.5)
 shape = SubResource("RectangleShape2D_1knha")
-
-[node name="JumpCooldown" type="Timer" parent="."]
-one_shot = true
 
 [connection signal="body_entered" from="Killzone" to="." method="_on_killzone_body_entered"]
