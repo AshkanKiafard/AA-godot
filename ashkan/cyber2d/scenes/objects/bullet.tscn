@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://1kqbcs8irb5w"]
+
+[ext_resource type="Texture2D" uid="uid://c6vy2gx1pfpnb" path="res://assets/sprites/guns/ak47/bullet.png" id="1_gfuoj"]
+[ext_resource type="Script" path="res://scripts/bullet.gd" id="1_jjhjg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cra55"]
+size = Vector2(6, 3)
+
+[node name="Bullet" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_jjhjg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(3, 0)
+texture = ExtResource("1_gfuoj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(3, 0)
+shape = SubResource("RectangleShape2D_cra55")

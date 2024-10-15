@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://cdghkcra344yb"]
+
+[ext_resource type="Script" path="res://scripts/scene_manager.gd" id="1_7eddl"]
+[ext_resource type="PackedScene" uid="uid://dutqxe2pw78fk" path="res://scenes/entities/player.tscn" id="2_rmhg0"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_s1osw"]
+distance = -647.0
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_7eddl")
+player_scene = ExtResource("2_rmhg0")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("WorldBoundaryShape2D_s1osw")
+
+[node name="SpawnPoints" type="Node" parent="."]
+
+[node name="0" type="Node2D" parent="SpawnPoints" groups=["PlayerSpawnPoint"]]
+position = Vector2(37, 500)
+
+[node name="1" type="Node2D" parent="SpawnPoints" groups=["PlayerSpawnPoint"]]
+position = Vector2(1057, 500)
