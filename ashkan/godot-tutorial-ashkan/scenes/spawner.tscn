@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://dpg7qubpurb8a"]
+
+[ext_resource type="Script" path="res://scripts/spawner.gd" id="1_8dtqk"]
+[ext_resource type="Texture2D" uid="uid://ck8dkggpmhtag" path="res://assets/sprites/world_tileset.png" id="2_d6whh"]
+
+[node name="Spawner" type="Node2D"]
+position = Vector2(-148, -557)
+script = ExtResource("1_8dtqk")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 3.136
+scale = Vector2(2, 2)
+texture = ExtResource("2_d6whh")
+region_enabled = true
+region_rect = Rect2(4, 114, 8, 14)

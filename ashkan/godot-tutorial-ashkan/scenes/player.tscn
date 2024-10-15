@@ -1,11 +1,12 @@
-[gd_scene load_steps=40 format=3 uid="uid://71t4snupia8g"]
+[gd_scene load_steps=41 format=3 uid="uid://71t4snupia8g"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_34oth"]
 [ext_resource type="Texture2D" uid="uid://cq2fk3fjq4x0p" path="res://assets/sprites/knight.png" id="1_418hy"]
-[ext_resource type="Texture2D" uid="uid://db03ephebyopf" path="res://assets/stamina bar/healthbarUnder.png" id="3_64smo"]
+[ext_resource type="Texture2D" uid="uid://dpr0tlrifddce" path="res://assets/stamina bar/green.png" id="3_23s84"]
 [ext_resource type="Script" path="res://scripts/stamina_bar.gd" id="3_e0qct"]
-[ext_resource type="Texture2D" uid="uid://o5p2femwjvph" path="res://assets/stamina bar/healthbarProgress.png" id="4_lrslp"]
+[ext_resource type="Texture2D" uid="uid://pt62tylmkjx6" path="res://assets/stamina bar/oxygen.png" id="5_vasns"]
 [ext_resource type="Script" path="res://scripts/oxygen_bar.gd" id="6_d6d63"]
+[ext_resource type="AudioStream" uid="uid://ck0c2sagugcyf" path="res://assets/sounds/hurt.wav" id="7_clq1v"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yi8va"]
 atlas = ExtResource("1_418hy")
@@ -272,7 +273,7 @@ script = ExtResource("1_34oth")
 position = Vector2(4, -28)
 scale = Vector2(2.03125, 2.03125)
 sprite_frames = SubResource("SpriteFrames_yllr2")
-animation = &"hurt"
+animation = &"idle"
 autoplay = "idle"
 script = SubResource("GDScript_57yl5")
 
@@ -281,27 +282,46 @@ position = Vector2(3, -15)
 shape = SubResource("CircleShape2D_wipbo")
 
 [node name="StaminaBar" type="TextureProgressBar" parent="." node_paths=PackedStringArray("player")]
-offset_left = -14.0
-offset_top = -55.0
-offset_right = 50.0
-offset_bottom = -45.0
-scale = Vector2(0.593815, 1)
-texture_under = ExtResource("3_64smo")
-texture_progress = ExtResource("4_lrslp")
+offset_left = -11.7505
+offset_top = -49.9746
+offset_right = 257.249
+offset_bottom = -1.97464
+scale = Vector2(0.15, 0.1)
+value = 100.0
+texture_progress = ExtResource("3_23s84")
 script = ExtResource("3_e0qct")
 player = NodePath("..")
 
 [node name="OxygenBar" type="TextureProgressBar" parent="." node_paths=PackedStringArray("player")]
-offset_left = -17.0
-offset_top = -10.0
-offset_right = 47.0
+offset_left = -19.5842
+offset_top = -5.40267
+offset_right = 246.416
+offset_bottom = 39.5973
 rotation = -1.5777
-scale = Vector2(0.360843, 0.480565)
-texture_under = ExtResource("3_64smo")
-texture_progress = ExtResource("4_lrslp")
+scale = Vector2(0.122, 0.09)
+value = 100.0
+texture_progress = ExtResource("5_vasns")
 script = ExtResource("6_d6d63")
 player = NodePath("..")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="HurtTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="HurtAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_clq1v")
+
+[node name="DeathTimer" type="Timer" parent="."]
+wait_time = 0.666
+one_shot = true
+
+[node name="CoyoteTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="XOverrideTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]
+[connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
+[connection signal="timeout" from="XOverrideTimer" to="." method="_on_x_override_timer_timeout"]

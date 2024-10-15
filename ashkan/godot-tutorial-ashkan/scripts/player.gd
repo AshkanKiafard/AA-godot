@@ -3,18 +3,37 @@ extends CharacterBody2D
 
 const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
+@onready var x_override_timer: Timer = $XOverrideTimer
+var override_x = false :
+	set(value):
+		override_x = value
+		x_override_timer.start()
+var direction
 var jump_count = 0
+var jump_available = true
 
-@onready var timer: Timer = $Timer
+@onready var coyote_timer: Timer = $CoyoteTimer
+@onready var death_timer: Timer = $DeathTimer
+@onready var hurt_audio: AudioStreamPlayer2D = $HurtAudio
+@onready var hurt_timer: Timer = $HurtTimer
+@onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 
 signal health_changed
 var health := 100 :
 	set(value):
-		if value < health:
-			timer.start()
-			animated_sprite.play("hurt")
-		health = clamp(value, 0, 100)
-		health_changed.emit()
+		if not is_rolling():
+			if value <= 0 and health > 0:
+				print("DEAD")
+				collision_shape_2d.queue_free()
+				Engine.time_scale = 0.5
+				death_timer.start()
+			if value < health:
+				if not in_water:
+					hurt_audio.play()
+				hurt_timer.start()
+				animated_sprite.play("hurt")
+			health = clamp(value, 0, 100)
+			health_changed.emit()
 
 signal stamina_changed
 var stamina := 0.0 :
@@ -34,7 +53,6 @@ var oxygen := 100.0 :
 var in_water = false
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var game: Node2D = $".."
 
 const FRIENDLY_SLIME = preload("res://scenes/friendly_slime.tscn")
 @onready var slime_timer: Timer = $SlimeTimer
@@ -49,19 +67,30 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		var gravity = get_gravity() if not in_water else get_gravity() / 2
 		velocity += gravity * delta
+		if coyote_timer.is_stopped() and jump_count == 0:
+			coyote_timer.start()
+	else:
+		if not x_override_timer.is_stopped() and x_override_timer.time_left < 1:
+			override_x = false
+			x_override_timer.stop()
+		jump_count = 0
+		jump_available = true
+		coyote_timer.stop()
 
 	# Handle jump.
 	if Input.is_action_just_pressed("jump"):
+		override_x = false
+		x_override_timer.stop()
 		if is_on_floor():
 			jump_count = 0
 		jump_count += 1
-		if jump_count <= 1 or (jump_count == 2 and stamina > -75):
+		if (jump_count <= 1 and jump_available) or (jump_count == 2 and stamina > -75):
 			stamina -= 25
 			velocity.y = JUMP_VELOCITY - (stamina * 2)
 
 	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction := Input.get_axis("move_left", "move_right")
+	if not override_x:
+		direction = Input.get_axis("move_left", "move_right")
 	animated_sprite.flip_h = false if direction == 1 else true if direction == -1 else animated_sprite.flip_h
 	var player_direction = -1 if animated_sprite.flip_h else 1
 
@@ -77,16 +106,16 @@ func _physics_process(delta: float) -> void:
 		restore_stamina(1)
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		
-	if timer.is_stopped():
+	if hurt_timer.is_stopped():
 		if is_on_floor():
-			if not (animated_sprite.is_playing() and animated_sprite.animation == "roll"):
+			if not is_rolling():
 				if direction == 0:
 					animated_sprite.play("idle")
 				else:
 					animated_sprite.play("run")
 			else:
 				velocity.x += player_direction * temp_speed
-			if Input.is_action_just_pressed("roll"):
+			if Input.is_action_just_pressed("roll") and stamina > -25:
 				stamina -= 75
 				animated_sprite.play("roll")
 		else:
@@ -94,9 +123,7 @@ func _physics_process(delta: float) -> void:
 
 	# handle oxygen
 	if oxygen == 0:
-		print("DEAD no oxygen")
-		visible = false
-		get_tree().reload_current_scene()
+		health -= 1
 	if in_water:
 		var v_direction := Input.get_axis("move_up", "move_down")
 		if v_direction:
@@ -116,4 +143,19 @@ func _input(event: InputEvent) -> void:
 		f_slime.position = Vector2(position.x + player_direction*5, position.y - 20)
 		f_slime.get_node("AnimatedSprite2D").flip_h = animated_sprite.flip_h
 		f_slime.direction = player_direction
-		game.add_child(f_slime)
+		get_parent().add_child(f_slime)
+
+
+func _on_death_timer_timeout() -> void:
+	Engine.time_scale = 1
+	get_tree().reload_current_scene()
+	
+func is_rolling():
+	return animated_sprite.is_playing() and animated_sprite.animation == "roll"
+
+func _on_coyote_timer_timeout() -> void:
+	jump_available = false
+
+
+func _on_x_override_timer_timeout() -> void:
+	override_x = false

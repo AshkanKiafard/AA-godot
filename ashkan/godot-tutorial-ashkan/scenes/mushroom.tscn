@@ -1,17 +1,24 @@
-[gd_scene load_steps=6 format=3 uid="uid://bp7hd728alk1x"]
+[gd_scene load_steps=7 format=3 uid="uid://bp7hd728alk1x"]
 
 [ext_resource type="Script" path="res://scripts/mushroom.gd" id="1_h3qmc"]
 [ext_resource type="Texture2D" uid="uid://ck8dkggpmhtag" path="res://assets/sprites/world_tileset.png" id="2_5edxf"]
 [ext_resource type="AudioStream" uid="uid://b7apjipae7ufd" path="res://assets/sounds/jump.wav" id="3_34fg0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fqlji"]
-size = Vector2(24, 26)
+size = Vector2(20, 22)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6k88o"]
-size = Vector2(24, 19.25)
+size = Vector2(24, 5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c7c27"]
+size = Vector2(5.625, 13.625)
 
 [node name="Mushroom" type="StaticBody2D"]
 script = ExtResource("1_h3qmc")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(1.67857, 1.82143)
@@ -20,17 +27,36 @@ region_enabled = true
 region_rect = Rect2(113, 81, 14, 14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_fqlji")
 
-[node name="Area2D" type="Area2D" parent="."]
-collision_mask = 2
+[node name="Top" type="Area2D" parent="."]
+collision_mask = 6
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(0, -4.375)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Top"]
+position = Vector2(0, -12)
 shape = SubResource("RectangleShape2D_6k88o")
 
 [node name="JumpSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_34fg0")
 bus = &"SFX"
 
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[node name="Left" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Left"]
+position = Vector2(-10, -2)
+shape = SubResource("RectangleShape2D_c7c27")
+
+[node name="Right" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Right"]
+position = Vector2(10, -2)
+shape = SubResource("RectangleShape2D_c7c27")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="Top" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="Top" to="." method="_on_top_body_entered"]
+[connection signal="body_entered" from="Left" to="." method="_on_left_body_entered"]
+[connection signal="body_entered" from="Right" to="." method="_on_right_body_entered"]
