@@ -291,6 +291,8 @@ sprite_frames = SubResource("SpriteFrames_rryn4")
 animation = &"walk"
 autoplay = "idle1"
 
+[node name="Camera2D" type="Camera2D" parent="."]
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -33.875)
 shape = SubResource("RectangleShape2D_kk8c0")
