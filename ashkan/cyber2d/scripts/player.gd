@@ -7,12 +7,8 @@ const JUMP_VELOCITY = -400.0
 @onready var camera: Camera2D = $Camera2D
 @export var bullet: PackedScene
 
-func _ready() -> void:
-	camera.enabled = is_multiplayer_authority()
 
 func _physics_process(delta: float) -> void:
-	if !is_multiplayer_authority:
-		return
 	handle_movement(delta)
 	handle_gun()
 

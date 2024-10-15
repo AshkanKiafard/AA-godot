@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://cdghkcra344yb"]
+[gd_scene load_steps=4 format=3 uid="uid://cdghkcra344yb"]
 
 [ext_resource type="Texture2D" uid="uid://do1ll16eh6qb7" path="res://icon.svg" id="1_ng735"]
-[ext_resource type="Script" path="res://scripts/multiplayer_spawner.gd" id="1_x0o4n"]
 [ext_resource type="PackedScene" uid="uid://dutqxe2pw78fk" path="res://scenes/entities/player.tscn" id="2_xldr7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ot343"]
@@ -23,7 +22,5 @@ shape = SubResource("RectangleShape2D_ot343")
 [node name="Node2D" type="Node2D" parent="."]
 position = Vector2(533, 316)
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-spawn_path = NodePath("../Node2D")
-script = ExtResource("1_x0o4n")
-playerScene = ExtResource("2_xldr7")
+[node name="Player" parent="." instance=ExtResource("2_xldr7")]
+position = Vector2(233, 492)
