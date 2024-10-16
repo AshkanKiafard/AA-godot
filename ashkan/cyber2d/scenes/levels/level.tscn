@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://cdghkcra344yb"]
+
+[ext_resource type="Texture2D" uid="uid://do1ll16eh6qb7" path="res://icon.svg" id="1_8w7x7"]
+[ext_resource type="PackedScene" uid="uid://dutqxe2pw78fk" path="res://scenes/entities/player.tscn" id="2_yebgy"]
+[ext_resource type="PackedScene" uid="uid://bstpt6upc38fa" path="res://scenes/UI/bars.tscn" id="3_itp81"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ot343"]
+size = Vector2(900, 127)
+
+[node name="Level" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(2, -2)
+scale = Vector2(5.35731, 1.15398)
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(-3.44, 1)
+scale = Vector2(7.04, 1)
+texture = ExtResource("1_8w7x7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-0.440002, 0.5)
+shape = SubResource("RectangleShape2D_ot343")
+
+[node name="Player" parent="." instance=ExtResource("2_yebgy")]
+position = Vector2(-445, -80)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Bars" parent="UI" node_paths=PackedStringArray("player") instance=ExtResource("3_itp81")]
+texture_filter = 1
+position = Vector2(13, 11)
+scale = Vector2(3, 3)
+player = NodePath("../../Player")
