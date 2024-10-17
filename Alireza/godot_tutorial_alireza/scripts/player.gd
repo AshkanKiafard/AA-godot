@@ -16,8 +16,8 @@ const ROLL_DURATION = 0.5
 const WATER_MOVEMENT_RATE = 0.75
 
 # Health variables
-var MAX_HEALTH = 100.0
-var current_health = MAX_HEALTH
+@export var max_health: float = 100.0
+var current_health: float = max_health
 
 # Stamina variables
 var stamina_depleted = false
@@ -26,7 +26,7 @@ var max_stamina = 100.0
 var current_stamina = max_stamina
 var recovery_timer = 0.0
 
-# Oxygen related variables
+# Oxygen variables
 var max_oxygen = 100.0
 var current_oxygen = max_oxygen
 var oxygen_depletion_rate = 15.0
@@ -47,6 +47,8 @@ var roll_timer = 0.0
 @onready var stamina_bar: ProgressBar = $"../CanvasLayer/StaminaBar"
 @onready var oxygen_bar: ProgressBar = $"../CanvasLayer/OxygenBar"
 
+@onready var jump_audio: AudioStreamPlayer2D = $JumpAudio
+
 func _physics_process(delta: float) -> void:
 	var current_speed = SPEED
 	var current_jump_velocity = JUMP_VELOCITY
@@ -62,7 +64,7 @@ func _physics_process(delta: float) -> void:
 			velocity.x = Input.get_axis("ui_left", "ui_right") * ROLL_SPEED
 			animation_sprite.play("roll")
 			move_and_slide()
-			return 
+			return
 
 	# Allow rolling only when not in water
 	if Input.is_action_just_pressed("ui_down") and not stamina_depleted and not is_rolling and is_on_floor() and not is_in_water:
@@ -108,18 +110,19 @@ func _physics_process(delta: float) -> void:
 		if current_stamina > 0:
 			stamina_depleted = false
 			recovery_timer = 0.0
-			
+
 	stamina_bar.value = current_stamina
 
 	# Oxygen depletion and swimming control
 	if is_in_water:
 		current_speed *= WATER_MOVEMENT_RATE
 		velocity.y = move_toward(velocity.y, 0, current_speed * delta)
-		
+
 		# Deplete oxygen over time
 		current_oxygen -= oxygen_depletion_rate * delta
 		if current_oxygen <= 0:
 			current_oxygen = 0
+			decrease_health(0.25)
 			oxygen_depleted = true
 	else:
 		# Recover oxygen when out of water
@@ -128,7 +131,7 @@ func _physics_process(delta: float) -> void:
 			if current_oxygen > max_oxygen:
 				current_oxygen = max_oxygen
 		oxygen_depleted = false
-		
+
 	oxygen_bar.value = current_oxygen
 
 	# Handle jumping
@@ -144,11 +147,12 @@ func _physics_process(delta: float) -> void:
 		elif current_stamina >= JUMP_STAMINA_COST:
 			velocity.y = current_jump_velocity
 			current_stamina -= JUMP_STAMINA_COST
+			jump_audio.play() 
 		jumps_left -= 1
 
 	# Handle movement direction
 	var direction = Input.get_axis("ui_left", "ui_right")
-	
+
 	if is_in_water:
 		var swim_direction_y = Input.get_axis("ui_up", "ui_down")
 		if swim_direction_y:
@@ -177,19 +181,22 @@ func _physics_process(delta: float) -> void:
 		animation_sprite.play("jump")
 
 	move_and_slide()
-	
+
 func set_in_water(in_water: bool) -> void:
 	is_in_water = in_water
-	
+
 func decrease_health(amount: float) -> void:
 	if not is_invulnerable:
 		current_health -= amount
 		if current_health < 0:
 			current_health = 0
-		health_bar.value = current_health
+		update_health_bar()
 
 func increase_health(amount: float) -> void:
 	current_health += amount
-	if current_health > MAX_HEALTH:
-		current_health = MAX_HEALTH
-	health_bar.value = current_health
+	if current_health > max_health:
+		current_health = max_health
+	update_health_bar()
+
+func update_health_bar() -> void:
+	health_bar.value = current_health / max_health * 100.0
