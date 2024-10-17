@@ -48,6 +48,11 @@ var is_damaged = false
 var hurt_audio_cooldown = 0.5
 var hurt_audio_timer = 0.0 
 
+# Death animation variables
+var is_dead = false
+var death_animation_duration = 0.375
+var death_timer = 0.0
+
 # References
 @onready var animation_sprite = $AnimatedSprite2D
 @onready var health_bar: ProgressBar = $"../CanvasLayer/HealthBar"
@@ -61,6 +66,12 @@ var hurt_audio_timer = 0.0
 func _physics_process(delta: float) -> void:
 	var current_speed = SPEED
 	var current_jump_velocity = JUMP_VELOCITY
+	
+	if is_dead:
+		death_timer += delta
+		if death_timer >= death_animation_duration:
+			restart_game()
+		return
 	
 	if hurt_audio_timer > 0:
 		hurt_audio_timer -= delta
@@ -134,7 +145,7 @@ func _physics_process(delta: float) -> void:
 		current_oxygen -= oxygen_depletion_rate * delta
 		if current_oxygen <= 0:
 			current_oxygen = 0
-			decrease_health(0.25)
+			decrease_health(0.5)
 			oxygen_depleted = true
 	else:
 		# Recover oxygen when out of water
@@ -179,6 +190,7 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, current_speed)
 
 	# Handle animations
+	
 	if is_damaged:
 		animation_sprite.play("damage")
 		damage_animation_timer += delta
@@ -209,6 +221,11 @@ func decrease_health(amount: float) -> void:
 		current_health -= amount
 		if current_health < 0:
 			current_health = 0
+			if not is_dead:
+				is_dead = true
+				Engine.time_scale = 0.2
+				animation_sprite.play("death")
+				return
 
 		if hurt_audio_timer <= 0:
 			hurt_audio.play()
@@ -223,6 +240,7 @@ func decrease_health(amount: float) -> void:
 		elif velocity.x > 0:
 			animation_sprite.flip_h = false
 
+
 func increase_health(amount: float) -> void:
 	current_health += amount
 	if current_health > max_health:
@@ -231,3 +249,7 @@ func increase_health(amount: float) -> void:
 
 func update_health_bar() -> void:
 	health_bar.value = current_health / max_health * 100.0
+	
+func restart_game() -> void:
+	Engine.time_scale = 1.0
+	get_tree().reload_current_scene()
