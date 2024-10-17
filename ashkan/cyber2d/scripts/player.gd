@@ -1,12 +1,8 @@
 extends CharacterBody2D
 
-@export var bullet: PackedScene
 @onready var animated_sprite: AnimatedSprite2D = $BikerSprite
-@onready var gun_sprite: Sprite2D = $Gun/GunSprite
-@onready var shoot_timer: Timer = $Gun/ShootTimer
 @onready var ground_ray_cast: RayCast2D = $GroundRayCast
 @onready var voice: AudioStreamPlayer2D = $voice
-@onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 const WOO_AUDIO = preload("res://assets/audio/characters/Biker/miscellaneous_4_sean.wav")
 const SHOUUTING_AUDIO = preload("res://assets/audio/characters/Biker/shouting_7_sean.wav")
@@ -29,7 +25,6 @@ var jump_available = true
 var x_direction
 var x_speed
 
-var can_shoot = true
 var shout = true
 
 signal health_changed
@@ -73,7 +68,6 @@ func _physics_process(delta: float) -> void:
 		jump_count = 0
 		shout = true
 	handle_movement(delta)
-	#handle_gun()
 	handle_animation()
 
 func handle_movement(delta: float):
@@ -82,7 +76,7 @@ func handle_movement(delta: float):
 		if is_on_floor():
 			jump_count = 0
 		jump_count += 1
-		if jump_count <= 3 and stamina >= 25:
+		if jump_count <= 3:
 			if jump_count == 1:
 				animated_sprite.play("jump")
 			else:
@@ -101,12 +95,6 @@ func handle_movement(delta: float):
 		# correct the sprite offset
 		animated_sprite.position.x -= 40 * (-x_direction)
 		
-	if flip_h:
-		animation_player.play("flip_gun")
-	else:
-		animation_player.play("RESET")
-	
-
 	var x_speed = SPEED
 	var regen_stamina = true
 	if x_direction:
@@ -128,18 +116,6 @@ func handle_movement(delta: float):
 		restore_stamina(2)
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 	move_and_slide()
-
-func handle_gun():
-	if Input.is_action_pressed("fire") and can_shoot:
-		can_shoot = false
-		shoot_timer.start()
-		var shooted_bullet = bullet.instantiate()
-		var bullet_direction = -1 if animated_sprite.flip_h else 1
-		shooted_bullet.global_position = $Gun/BulletSpawn.global_position
-		shooted_bullet.global_rotation = $Gun.global_rotation
-		shooted_bullet.direction = Vector2(bullet_direction,0)
-		shooted_bullet.speed += velocity.x * (bullet_direction)
-		get_tree().root.add_child(shooted_bullet)
 
 func handle_animation():
 	# if hurt_timer.is_stopped():
@@ -163,7 +139,3 @@ func play_voice(pitch_scale, audio):
 
 func choose(l: Array):
 	return l[randi()%len(l)]
-
-
-func _on_shoot_timer_timeout() -> void:
-	can_shoot = true

@@ -1,9 +1,7 @@
-[gd_scene load_steps=76 format=3 uid="uid://dutqxe2pw78fk"]
+[gd_scene load_steps=70 format=3 uid="uid://dutqxe2pw78fk"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_muq57"]
-[ext_resource type="Texture2D" uid="uid://drpnuu468ii7w" path="res://assets/sprites/guns/ak47/gun.png" id="2_dc817"]
 [ext_resource type="Texture2D" uid="uid://c5vj8rr37i4d7" path="res://assets/sprites/characters/Biker/Biker_doublejump.png" id="2_sxy8p"]
-[ext_resource type="PackedScene" uid="uid://1kqbcs8irb5w" path="res://scenes/objects/bullet.tscn" id="2_y4kej"]
 [ext_resource type="Texture2D" uid="uid://bvecf7qwtempp" path="res://assets/sprites/characters/Biker/Biker_attack1.png" id="3_134qt"]
 [ext_resource type="Texture2D" uid="uid://chw4rief20hnx" path="res://assets/sprites/characters/Biker/Dash.png" id="3_caqfa"]
 [ext_resource type="Texture2D" uid="uid://cdciftqh4l1pe" path="res://assets/sprites/characters/Biker/Biker_idle.png" id="3_i1q2m"]
@@ -12,8 +10,6 @@
 [ext_resource type="Texture2D" uid="uid://ci47sssovcvlf" path="res://assets/sprites/characters/Biker/Biker_jump.png" id="5_3ewwv"]
 [ext_resource type="Texture2D" uid="uid://h1bhvmqk3ob7" path="res://assets/sprites/characters/Biker/Biker_run.png" id="6_tatt6"]
 [ext_resource type="Texture2D" uid="uid://cn8fuedodojoj" path="res://assets/sprites/characters/Biker/Walk.png" id="7_h6no0"]
-[ext_resource type="Texture2D" uid="uid://c2ykrwew8bw5f" path="res://assets/sprites/characters/Biker/no hands/Walk2.png" id="12_estr8"]
-[ext_resource type="Texture2D" uid="uid://8mp1tteugur6" path="res://assets/sprites/characters/Biker/hands/8.png" id="14_nuh57"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fq047"]
 atlas = ExtResource("3_134qt")
@@ -215,28 +211,31 @@ region = Rect2(192, 0, 48, 48)
 atlas = ExtResource("7_h6no0")
 region = Rect2(240, 0, 48, 48)
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_v8nxa"]
+load_path = "res://.godot/imported/Walk2.png-3c6fab0a14b3270994cc42c418fa35e9.ctex"
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_ut5o2"]
-atlas = ExtResource("12_estr8")
+atlas = SubResource("CompressedTexture2D_v8nxa")
 region = Rect2(0, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fllja"]
-atlas = ExtResource("12_estr8")
+atlas = SubResource("CompressedTexture2D_v8nxa")
 region = Rect2(48, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ew525"]
-atlas = ExtResource("12_estr8")
+atlas = SubResource("CompressedTexture2D_v8nxa")
 region = Rect2(96, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rdkq6"]
-atlas = ExtResource("12_estr8")
+atlas = SubResource("CompressedTexture2D_v8nxa")
 region = Rect2(144, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gncaj"]
-atlas = ExtResource("12_estr8")
+atlas = SubResource("CompressedTexture2D_v8nxa")
 region = Rect2(192, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ws2ee"]
-atlas = ExtResource("12_estr8")
+atlas = SubResource("CompressedTexture2D_v8nxa")
 region = Rect2(240, 0, 48, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_rryn4"]
@@ -463,155 +462,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kk8c0"]
 size = Vector2(49, 68)
 
-[sub_resource type="Animation" id="Animation_m7bqg"]
-length = 10.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("..:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(6.5, -33)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../GunSprite:flip_h")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(33, -10)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("../Hands:flip_h")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("../Hands:position")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(7.5, -7)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("../GunSprite:position")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(5, -8.5)]
-}
-
-[sub_resource type="Animation" id="Animation_avkld"]
-resource_name = "flip_gun"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("../GunSprite:flip_h")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../Hands:flip_h")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("../GunSprite:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(-26, -8.5)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("../Hands:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(-23.5, -7)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath(".:position")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(-55, -10)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_n8msm"]
-_data = {
-"RESET": SubResource("Animation_m7bqg"),
-"flip_gun": SubResource("Animation_avkld")
-}
-
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 scale = Vector2(2, 2)
 collision_layer = 2
 script = ExtResource("1_muq57")
-bullet = ExtResource("2_y4kej")
 
 [node name="Node2D" type="Node2D" parent="."]
 
@@ -622,7 +476,6 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_rryn4")
 animation = &"walk_handsfree"
 autoplay = "idle1"
-frame_progress = 0.286514
 
 [node name="Camera2D" type="Camera2D" parent="."]
 process_callback = 0
@@ -632,39 +485,7 @@ position_smoothing_enabled = true
 position = Vector2(0, -34)
 shape = SubResource("RectangleShape2D_kk8c0")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-root_node = NodePath("../Gun/BulletSpawn")
-libraries = {
-"": SubResource("AnimationLibrary_n8msm")
-}
-
-[node name="Gun" type="Node2D" parent="."]
-visible = false
-position = Vector2(6.5, -33)
-
-[node name="ShootTimer" type="Timer" parent="Gun"]
-wait_time = 0.1
-one_shot = true
-
-[node name="BulletSpawn" type="Node2D" parent="Gun"]
-position = Vector2(33, -10)
-scale = Vector2(2, 2)
-
-[node name="GunSprite" type="Sprite2D" parent="Gun"]
-texture_filter = 1
-position = Vector2(5, -8.5)
-scale = Vector2(2, 2)
-texture = ExtResource("2_dc817")
-
-[node name="Hands" type="Sprite2D" parent="Gun"]
-texture_filter = 1
-position = Vector2(7.5, -7)
-scale = Vector2(2, 2)
-texture = ExtResource("14_nuh57")
-
 [node name="voice" type="AudioStreamPlayer2D" parent="."]
 
 [node name="GroundRayCast" type="RayCast2D" parent="."]
 target_position = Vector2(0, 200)
-
-[connection signal="timeout" from="Gun/ShootTimer" to="." method="_on_shoot_timer_timeout"]
