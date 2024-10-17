@@ -41,18 +41,30 @@ var is_invulnerable = false
 var is_rolling = false
 var roll_timer = 0.0
 
+# Damage animation
+var damage_animation_timer = 0.0
+var damage_animation_duration = 0.1
+var is_damaged = false
+var hurt_audio_cooldown = 0.5
+var hurt_audio_timer = 0.0 
+
 # References
 @onready var animation_sprite = $AnimatedSprite2D
 @onready var health_bar: ProgressBar = $"../CanvasLayer/HealthBar"
 @onready var stamina_bar: ProgressBar = $"../CanvasLayer/StaminaBar"
 @onready var oxygen_bar: ProgressBar = $"../CanvasLayer/OxygenBar"
 
+# Audios
 @onready var jump_audio: AudioStreamPlayer2D = $JumpAudio
+@onready var hurt_audio: AudioStreamPlayer2D = $HurtAudio
 
 func _physics_process(delta: float) -> void:
 	var current_speed = SPEED
 	var current_jump_velocity = JUMP_VELOCITY
-
+	
+	if hurt_audio_timer > 0:
+		hurt_audio_timer -= delta
+		
 	# Roll handling
 	if is_rolling:
 		roll_timer += delta
@@ -167,18 +179,25 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, current_speed)
 
 	# Handle animations
-	if direction < 0:
-		animation_sprite.flip_h = true
-	elif direction > 0:
-		animation_sprite.flip_h = false
-
-	if is_on_floor():
-		if direction == 0:
-			animation_sprite.play("idle")
-		else:
-			animation_sprite.play("run")
+	if is_damaged:
+		animation_sprite.play("damage")
+		damage_animation_timer += delta
+		if damage_animation_timer >= damage_animation_duration:
+			is_damaged = false
+			damage_animation_timer = 0.0
 	else:
-		animation_sprite.play("jump")
+		if direction < 0:
+			animation_sprite.flip_h = true
+		elif direction > 0:
+			animation_sprite.flip_h = false
+
+		if is_on_floor():
+			if direction == 0:
+				animation_sprite.play("idle")
+			else:
+				animation_sprite.play("run")
+		else:
+			animation_sprite.play("jump")
 
 	move_and_slide()
 
@@ -190,7 +209,19 @@ func decrease_health(amount: float) -> void:
 		current_health -= amount
 		if current_health < 0:
 			current_health = 0
+
+		if hurt_audio_timer <= 0:
+			hurt_audio.play()
+			hurt_audio_timer = hurt_audio_cooldown
 		update_health_bar()
+
+		is_damaged = true
+		damage_animation_timer = 0.0
+		
+		if velocity.x < 0:
+			animation_sprite.flip_h = true
+		elif velocity.x > 0:
+			animation_sprite.flip_h = false
 
 func increase_health(amount: float) -> void:
 	current_health += amount

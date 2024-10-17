@@ -1,24 +1,13 @@
-[gd_scene load_steps=43 format=3 uid="uid://vd63hulqofaf"]
+[gd_scene load_steps=41 format=3 uid="uid://vd63hulqofaf"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_rhgpa"]
 [ext_resource type="Texture2D" uid="uid://c00jtv3k7rt0y" path="res://assets/sprites/knight.png" id="1_syfp4"]
 [ext_resource type="AudioStream" uid="uid://b4pbnohnx04jt" path="res://assets/sounds/jump.wav" id="3_2yj2l"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yuh7x"]
-atlas = ExtResource("1_syfp4")
-region = Rect2(0, 192, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ipslf"]
-atlas = ExtResource("1_syfp4")
-region = Rect2(32, 192, 32, 32)
+[ext_resource type="AudioStream" uid="uid://0hbl7b12ecyl" path="res://assets/sounds/hurt.wav" id="4_ng8et"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_57cf3"]
 atlas = ExtResource("1_syfp4")
 region = Rect2(64, 192, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_nwrv4"]
-atlas = ExtResource("1_syfp4")
-region = Rect2(96, 192, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kad7j"]
 atlas = ExtResource("1_syfp4")
@@ -156,16 +145,7 @@ region = Rect2(224, 96, 32, 32)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_yuh7x")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ipslf")
-}, {
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_57cf3")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_nwrv4")
 }],
 "loop": true,
 "name": &"damage",
@@ -306,7 +286,7 @@ script = ExtResource("1_rhgpa")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_n3jik")
-animation = &"jump"
+animation = &"damage"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -316,3 +296,6 @@ shape = SubResource("CircleShape2D_dvx6e")
 
 [node name="JumpAudio" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_2yj2l")
+
+[node name="HurtAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_ng8et")
