@@ -1,13 +1,22 @@
-[gd_scene load_steps=5 format=3 uid="uid://cdghkcra344yb"]
+[gd_scene load_steps=6 format=3 uid="uid://cdghkcra344yb"]
 
 [ext_resource type="Texture2D" uid="uid://do1ll16eh6qb7" path="res://icon.svg" id="1_8w7x7"]
 [ext_resource type="PackedScene" uid="uid://dutqxe2pw78fk" path="res://scenes/entities/player.tscn" id="2_yebgy"]
 [ext_resource type="PackedScene" uid="uid://bstpt6upc38fa" path="res://scenes/UI/bars.tscn" id="3_itp81"]
+[ext_resource type="PackedScene" uid="uid://ck4jhstpbjecu" path="res://scenes/entities/zombie.tscn" id="4_kljye"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ot343"]
 size = Vector2(900, 127)
 
 [node name="Level" type="Node2D"]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Bars" parent="UI" node_paths=PackedStringArray("player") instance=ExtResource("3_itp81")]
+texture_filter = 1
+position = Vector2(13, 11)
+scale = Vector2(3, 3)
+player = NodePath("../../Player")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(2, -2)
@@ -22,13 +31,13 @@ texture = ExtResource("1_8w7x7")
 position = Vector2(-0.440002, 0.5)
 shape = SubResource("RectangleShape2D_ot343")
 
+[node name="Zombie" parent="." instance=ExtResource("4_kljye")]
+position = Vector2(-1244, -171)
+scale = Vector2(3.7, 3.7)
+
+[node name="Zombie2" parent="." instance=ExtResource("4_kljye")]
+position = Vector2(1068, -177)
+scale = Vector2(3.7, 3.7)
+
 [node name="Player" parent="." instance=ExtResource("2_yebgy")]
 position = Vector2(-445, -80)
-
-[node name="UI" type="CanvasLayer" parent="."]
-
-[node name="Bars" parent="UI" node_paths=PackedStringArray("player") instance=ExtResource("3_itp81")]
-texture_filter = 1
-position = Vector2(13, 11)
-scale = Vector2(3, 3)
-player = NodePath("../../Player")

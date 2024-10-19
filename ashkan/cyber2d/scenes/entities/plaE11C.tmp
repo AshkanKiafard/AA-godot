@@ -1,4 +1,4 @@
-[gd_scene load_steps=163 format=3 uid="uid://dutqxe2pw78fk"]
+[gd_scene load_steps=151 format=3 uid="uid://dutqxe2pw78fk"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_muq57"]
 [ext_resource type="Texture2D" uid="uid://b3h6glgw43dbs" path="res://assets/sprites/weapons/3 Attack/1.png" id="2_06whg"]
@@ -15,8 +15,6 @@
 [ext_resource type="Texture2D" uid="uid://cn8fuedodojoj" path="res://assets/sprites/characters/Biker/Walk.png" id="7_h6no0"]
 [ext_resource type="Texture2D" uid="uid://dvelfawipgr7d" path="res://assets/sprites/characters/Biker/melee/Idle.png" id="8_64ry1"]
 [ext_resource type="Texture2D" uid="uid://b5qclg5h5geuu" path="res://assets/sprites/characters/Biker/melee/Attack.png" id="8_kgxo4"]
-[ext_resource type="Texture2D" uid="uid://c7djxxqfh7qsh" path="res://assets/sprites/characters/Biker/Biker_death.png" id="8_kudsx"]
-[ext_resource type="Texture2D" uid="uid://djm2osg8exqdt" path="res://assets/sprites/characters/Biker/Biker_hurt.png" id="9_8eelk"]
 [ext_resource type="Texture2D" uid="uid://bc4ksej3s7lok" path="res://assets/sprites/characters/Biker/melee/Run.png" id="11_dq2b0"]
 [ext_resource type="Texture2D" uid="uid://k5eq7fkfng3m" path="res://assets/sprites/weapons/1 Idle/1.png" id="12_miijn"]
 [ext_resource type="Texture2D" uid="uid://d1feylmd0y5pq" path="res://assets/sprites/characters/Biker/melee/Run_attack.png" id="14_04tte"]
@@ -218,30 +216,6 @@ region = Rect2(144, 0, 48, 48)
 atlas = ExtResource("3_caqfa")
 region = Rect2(192, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_wepds"]
-atlas = ExtResource("8_kudsx")
-region = Rect2(0, 0, 48, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qubvj"]
-atlas = ExtResource("8_kudsx")
-region = Rect2(48, 0, 48, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_be0aj"]
-atlas = ExtResource("8_kudsx")
-region = Rect2(96, 0, 48, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tgxhj"]
-atlas = ExtResource("8_kudsx")
-region = Rect2(144, 0, 48, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_t7w5s"]
-atlas = ExtResource("8_kudsx")
-region = Rect2(192, 0, 48, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_g52x1"]
-atlas = ExtResource("8_kudsx")
-region = Rect2(240, 0, 48, 48)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_7dhtq"]
 atlas = ExtResource("2_sxy8p")
 region = Rect2(0, 0, 48, 48)
@@ -265,14 +239,6 @@ region = Rect2(192, 0, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_fweq6"]
 atlas = ExtResource("2_sxy8p")
 region = Rect2(240, 0, 48, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_aios8"]
-atlas = ExtResource("9_8eelk")
-region = Rect2(0, 0, 48, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7q5xp"]
-atlas = ExtResource("9_8eelk")
-region = Rect2(48, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xyr8r"]
 atlas = ExtResource("3_i1q2m")
@@ -639,29 +605,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_wepds")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qubvj")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_be0aj")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_tgxhj")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_t7w5s")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_g52x1")
-}],
-"loop": false,
-"name": &"death",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_7dhtq")
 }, {
 "duration": 1.0,
@@ -682,17 +625,6 @@ animations = [{
 "loop": false,
 "name": &"double_jump",
 "speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_aios8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7q5xp")
-}],
-"loop": true,
-"name": &"hurt",
-"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1079,11 +1011,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kk8c0"]
-size = Vector2(26, 68)
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_lujby"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_ruglq"]
+size = Vector2(49, 68)
 
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 scale = Vector2(2, 2)
@@ -1103,9 +1031,8 @@ texture_filter = 1
 position = Vector2(18.5, -48)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_2qdsw")
-animation = &"idle_attack"
+animation = &"run_attack"
 autoplay = "idle_attack"
-frame_progress = 0.014811
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -1127,7 +1054,7 @@ process_callback = 0
 position_smoothing_enabled = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-2.5, -34)
+position = Vector2(0, -34)
 shape = SubResource("RectangleShape2D_kk8c0")
 
 [node name="voice" type="AudioStreamPlayer2D" parent="."]
@@ -1136,30 +1063,7 @@ shape = SubResource("RectangleShape2D_kk8c0")
 wait_time = 2.0
 one_shot = true
 
-[node name="HurtTimer" type="Timer" parent="."]
-wait_time = 0.1
-one_shot = true
-
 [node name="GroundRayCast" type="RayCast2D" parent="."]
 target_position = Vector2(0, 250)
 
-[node name="AttackArea" type="Area2D" parent="."]
-visible = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
-position = Vector2(25, -39.5)
-scale = Vector2(1.5, 1.5)
-shape = SubResource("CircleShape2D_lujby")
-
-[node name="AttackAreaArmed" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackAreaArmed"]
-position = Vector2(34.5, -38.5)
-scale = Vector2(2, 2)
-shape = SubResource("CircleShape2D_ruglq")
-
 [connection signal="timeout" from="GruntTimer" to="." method="_on_grunt_timer_timeout"]
-[connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
-[connection signal="body_exited" from="AttackArea" to="." method="_on_attack_area_body_exited"]
-[connection signal="body_entered" from="AttackAreaArmed" to="." method="_on_attack_area_armed_body_entered"]
-[connection signal="body_exited" from="AttackAreaArmed" to="." method="_on_attack_area_armed_body_exited"]

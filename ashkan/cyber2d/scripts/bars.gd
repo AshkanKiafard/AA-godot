@@ -26,5 +26,3 @@ func update_stamina() -> void:
 	stamina_bar_2.value = stamina - 25
 	stamina_bar_3.value = stamina - 50
 	stamina_bar_4.value = stamina - 75
-
-	

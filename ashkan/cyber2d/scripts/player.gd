@@ -1,3 +1,4 @@
+class_name Player
 extends CharacterBody2D
 
 @export var armed: bool
@@ -8,9 +9,38 @@ extends CharacterBody2D
 @onready var ground_ray_cast: RayCast2D = $GroundRayCast
 @onready var voice: AudioStreamPlayer2D = $voice
 @onready var grunt_timer: Timer = $GruntTimer
+@onready var attack_area: Area2D = $AttackArea
+@onready var attack_area_armed: Area2D = $AttackAreaArmed
+@onready var hurt_timer: Timer = $HurtTimer
+
+var collided_enemies: Array
 
 const WOO_AUDIO = preload("res://assets/audio/characters/Biker/miscellaneous_4_sean.wav")
 const SHOUUTING_AUDIO = preload("res://assets/audio/characters/Biker/shouting_7_sean.wav")
+const DAMAGE_AUDIOS = [
+	preload("res://assets/audio/characters/Biker/damage_1_sean.wav"),
+	preload("res://assets/audio/characters/Biker/damage_2_sean.wav"),
+	preload("res://assets/audio/characters/Biker/damage_3_sean.wav"),
+	preload("res://assets/audio/characters/Biker/damage_4_sean.wav"),
+	preload("res://assets/audio/characters/Biker/damage_5_sean.wav"),
+	preload("res://assets/audio/characters/Biker/damage_6_sean.wav"),
+	preload("res://assets/audio/characters/Biker/damage_7_sean.wav"),
+	preload("res://assets/audio/characters/Biker/damage_8_sean.wav"),
+	preload("res://assets/audio/characters/Biker/damage_9_sean.wav"),
+	preload("res://assets/audio/characters/Biker/damage_10_sean.wav"),
+]
+const DEATH_AUDIOS = [
+	preload("res://assets/audio/characters/Biker/death_1_sean.wav"),
+	preload("res://assets/audio/characters/Biker/death_2_sean.wav"),
+	preload("res://assets/audio/characters/Biker/death_3_sean.wav"),
+	preload("res://assets/audio/characters/Biker/death_4_sean.wav"),
+	preload("res://assets/audio/characters/Biker/death_5_sean.wav"),
+	preload("res://assets/audio/characters/Biker/death_6_sean.wav"),
+	preload("res://assets/audio/characters/Biker/death_7_sean.wav"),
+	preload("res://assets/audio/characters/Biker/death_8_sean.wav"),
+	preload("res://assets/audio/characters/Biker/death_9_sean.wav"),
+	preload("res://assets/audio/characters/Biker/death_10_sean.wav"),
+]
 const GRUNT_AUDIOS = {
 	"jump": [preload("res://assets/audio/characters/Biker/grunting_1_sean.wav"),
 	preload("res://assets/audio/characters/Biker/grunting_2_sean.wav")],
@@ -22,7 +52,7 @@ const GRUNT_AUDIOS = {
 	preload("res://assets/audio/characters/Biker/grunting_6_sean.wav"),
 	preload("res://assets/audio/characters/Biker/grunting_7_sean.wav"),
 	preload("res://assets/audio/characters/Biker/grunting_8_sean.wav")]
-	}
+}
 
 const SPEED = 350.0
 const JUMP_VELOCITY = -400.0
@@ -42,20 +72,22 @@ var shout = true
 var grunt = true
 
 signal health_changed
+var dead = false
 var health := 100.0 :
 	set(value):
 		if not is_dashing():
 			if value <= 0 and health > 0:
 				print("DEAD")
-				# TODO
-			if value < health:
-				# TODO
-				pass
-				#hurt_audio.play()
-				#hurt_timer.start()
-				#player_sprite.play("hurt")
+				dead = true
+				play_voice(1, choose(DEATH_AUDIOS))
+			if value < health and value > 0:
+				if hurt_timer.is_stopped():
+					play_voice(1, choose(DAMAGE_AUDIOS))
+				if is_on_floor():
+					hurt_timer.start()
 			health = clamp(value, 0, 100)
 			health_changed.emit()
+var taken_damage = 0
 
 signal stamina_changed
 var stamina := 100.0 :
@@ -71,6 +103,15 @@ func is_dashing():
 	return player_sprite.is_playing() and player_sprite.animation == "dash"
 
 func _physics_process(delta: float) -> void:
+	if dead: return
+	for enemy in collided_enemies:
+		if attack:
+			enemy.health -= 0.5
+	health -= taken_damage
+	handle_movement(delta)
+	handle_animation()
+
+func handle_movement(delta):
 	# Add the gravity.
 	if not is_on_floor():
 		weapon_sprite.visible = false
@@ -81,10 +122,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		jump_count = 0
 		shout = true
-	handle_movement()
-	handle_animation()
-
-func handle_movement():
+		
 	# Handle jump
 	# TODO add coyote time
 	if Input.is_action_just_pressed("jump"):
@@ -105,7 +143,7 @@ func handle_movement():
 	x_direction = Input.get_axis("move_left", "move_right")
 	
 	var regen_stamina = true
-	attack = Input.is_action_pressed("attack") and stamina > 5
+	attack = Input.is_action_pressed("attack") and stamina > 0 and hurt_timer.is_stopped()
 	if attack:
 		if grunt:
 			play_voice(1+randf_range(-0.1, 0.1), choose(GRUNT_AUDIOS["attack"]))
@@ -117,7 +155,10 @@ func handle_movement():
 	else:
 		grunt = true
 		grunt_timer.stop()
-		
+		if Input.is_action_pressed("attack"):
+			regen_stamina = false
+
+	
 	x_speed = SPEED
 	if x_direction:
 		if Input.is_action_pressed("run"):
@@ -142,19 +183,26 @@ func handle_movement():
 	move_and_slide()
 
 func handle_animation():
-	# if hurt_timer.is_stopped():
-	if is_on_floor():
-		if not is_dashing():
-			if x_direction == 0:
-				play_anim("idle", attack, armed)
-			else:
-				if Input.is_action_pressed("run"):
-					play_anim("run", attack, armed)
+	if dead:
+		play_anim("death", false, false)
+		return
+	if hurt_timer.is_stopped():
+		if is_on_floor():
+			if not is_dashing():
+				if x_direction == 0:
+					play_anim("idle", attack, armed)
 				else:
-					play_anim("walk", attack, armed)
+					if Input.is_action_pressed("run"):
+						play_anim("run", attack, armed)
+					else:
+						play_anim("walk", attack, armed)
+		else:
+			if jump_count == 0 and player_sprite.animation != "jump":
+				play_anim("jump", false, false)
 	else:
-		if jump_count == 0 and player_sprite.animation != "jump":
-			play_anim("jump", false, false)
+		play_anim("hurt", false, false)
+		hand_sprite.visible = true
+		weapon_sprite.visible = armed
 
 func play_anim(anim:String, is_attacking: bool, melee: bool):
 	# reset sprites
@@ -175,13 +223,15 @@ func play_anim(anim:String, is_attacking: bool, melee: bool):
 		legs_sprite.position.x += 40 * x_direction
 		hand_sprite.position.x += 20 * x_direction
 		hand_sprite.rotation += 45 * x_direction
+		attack_area.position.x += 50 * x_direction
+		attack_area_armed.position.x += 70 * x_direction
 	
 	# can't attack when jump-/dashing
 	if "jump" in anim or "dash" in anim:
-		weapon_sprite.visible = false
+		hurt_timer.stop()
 		melee = false
-	else:
-		weapon_sprite.visible = armed
+	
+	weapon_sprite.visible = melee
 	
 	var melee_str = "_melee" if melee else ""
 	var attack_str = "_attack" if is_attacking else ""
@@ -208,7 +258,7 @@ func play_anim(anim:String, is_attacking: bool, melee: bool):
 				player_sprite.position.y -= 10
 	
 	# sync
-	if anim == last_anim and (last_melee != melee or last_attack != attack):#
+	if anim == last_anim and (last_melee != melee or last_attack != attack):
 		player_sprite.frame = last_frame + 1
 	weapon_sprite.frame = player_sprite.frame
 	legs_sprite.frame = player_sprite.frame
@@ -228,3 +278,19 @@ func choose(l: Array):
 
 func _on_grunt_timer_timeout() -> void:
 	grunt = true
+
+func _on_attack_area_body_entered(body: Node2D) -> void:
+	pass
+	#if body.is_in_group("Enemy"):
+		#collided_enemies.append(body)
+
+func _on_attack_area_body_exited(body: Node2D) -> void:
+	pass
+
+func _on_attack_area_armed_body_entered(body: Node2D) -> void:
+	if body.is_in_group("Enemy"):
+		collided_enemies.append(body)
+
+func _on_attack_area_armed_body_exited(body: Node2D) -> void:
+	if body.is_in_group("Enemy"):
+		collided_enemies.remove_at(collided_enemies.find(body))
