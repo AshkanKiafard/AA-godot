@@ -6,6 +6,7 @@ extends CharacterBody2D
 @onready var hurt_timer: Timer = $HurtTimer
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var attack_area: Area2D = $AttackArea
+@onready var health_bar: TextureProgressBar = $HealthBar
 
 var speed = 200.0
 
@@ -15,10 +16,14 @@ var health = 100:
 			state = DEAD
 			animated_sprite.play("death")
 			$CollisionShape2D.disabled = true
+			vision_ray_cast.enabled = false
+			ground_ray_cast.enabled = false
+			attack_range_ray_cast.enabled = false
 		if value < health and state != DEAD:
 			hurt_timer.start()
 			state = HURT
 		health = clamp(value, 0, 100)
+		health_bar.value = health
 var taken_damage = 0
 
 enum {IDLE, WALK, CHASE, ATTACK, HURT, DEAD, EAT}
@@ -47,6 +52,8 @@ func brain():
 	if state != CHASE and vision_ray_cast.is_colliding():
 		var player = vision_ray_cast.get_collider()
 		if player is Player and !player.dead:
+			if state == ATTACK and not attack_range_ray_cast.is_colliding():
+				await get_tree().create_timer(0.5).timeout
 			state = CHASE
 	
 	if state in [CHASE, ATTACK] and not vision_ray_cast.is_colliding():
@@ -113,7 +120,7 @@ func handle_animation():
 func _on_attack_area_body_entered(body: Node2D) -> void:
 	# TODO only when attack?
 	if state != DEAD and body is Player:
-		body.taken_damage = 0.3
+		body.taken_damage += 0.3
 
 func _on_attack_area_body_exited(body: Node2D) -> void:
 	if body is Player:

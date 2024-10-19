@@ -103,13 +103,26 @@ func is_dashing():
 	return player_sprite.is_playing() and player_sprite.animation == "dash"
 
 func _physics_process(delta: float) -> void:
-	if dead: return
+	if dead:
+		velocity += get_gravity() * delta
+		velocity.x = 0
+		move_and_slide()
+		return
+	handle_movement(delta)
+	handle_combat()
+	handle_animation()
+
+func handle_combat():
 	for enemy in collided_enemies:
 		if attack:
 			enemy.health -= 0.5
 	health -= taken_damage
-	handle_movement(delta)
-	handle_animation()
+	
+	if Input.is_action_just_pressed("swap_weapon"):
+		armed = !armed
+		$AttackArea/CollisionShape2D.disabled = armed
+		$AttackAreaArmed/CollisionShape2D.disabled = !armed
+
 
 func handle_movement(delta):
 	# Add the gravity.
@@ -143,7 +156,7 @@ func handle_movement(delta):
 	x_direction = Input.get_axis("move_left", "move_right")
 	
 	var regen_stamina = true
-	attack = Input.is_action_pressed("attack") and stamina > 0 and hurt_timer.is_stopped()
+	attack = Input.is_action_pressed("attack") and stamina > 0 and (hurt_timer.is_stopped() or !armed)
 	if attack:
 		if grunt:
 			play_voice(1+randf_range(-0.1, 0.1), choose(GRUNT_AUDIOS["attack"]))
@@ -171,7 +184,10 @@ func handle_movement(delta):
 			regen_stamina = false
 			stamina -= 75
 		if is_dashing():
+			collision_mask = 1
 			x_speed *= 10
+		else:
+			collision_mask = 5
 		velocity.x = x_direction * x_speed
 		if regen_stamina:
 			restore_stamina(0.3)
@@ -186,7 +202,7 @@ func handle_animation():
 	if dead:
 		play_anim("death", false, false)
 		return
-	if hurt_timer.is_stopped():
+	if hurt_timer.is_stopped() or (!armed and attack):
 		if is_on_floor():
 			if not is_dashing():
 				if x_direction == 0:
@@ -280,12 +296,12 @@ func _on_grunt_timer_timeout() -> void:
 	grunt = true
 
 func _on_attack_area_body_entered(body: Node2D) -> void:
-	pass
-	#if body.is_in_group("Enemy"):
-		#collided_enemies.append(body)
+	if body.is_in_group("Enemy"):
+		collided_enemies.append(body)
 
 func _on_attack_area_body_exited(body: Node2D) -> void:
-	pass
+	if body.is_in_group("Enemy"):
+		collided_enemies.remove_at(collided_enemies.find(body))
 
 func _on_attack_area_armed_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Enemy"):
