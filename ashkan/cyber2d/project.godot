@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Cyber2D"
-run/main_scene="res://scenes/levels/level.tscn"
+run/main_scene="res://scenes/levels/main.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/mode=3
 
 [global_group]
 

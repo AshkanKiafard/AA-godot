@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 @export var walk_speed := 200.0
-@export var run_speed := 450.0
+@export var run_speed := 350
 @onready var vision_ray_cast: RayCast2D = $VisionRayCast
 @onready var vision_ray_cast2: RayCast2D = $VisionRayCast2
 @onready var attack_range_ray_cast: RayCast2D = $AttackRangeRayCast
@@ -130,6 +130,7 @@ func _on_attack_area_body_exited(body: Node2D) -> void:
 		collided_players.remove_at(collided_players.find(body))
 
 func _on_stun_area_body_entered(body: Node2D) -> void:
+	print(body)
 	if body.is_in_group("Player") and state != DEAD:
 		state = STUN
 		stun_timer.start()

@@ -1086,7 +1086,6 @@ size = Vector2(26, 68)
 [sub_resource type="CircleShape2D" id="CircleShape2D_ruglq"]
 
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
-scale = Vector2(2, 2)
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_muq57")
@@ -1125,10 +1124,6 @@ scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_dmcim")
 animation = &"walk"
 
-[node name="Camera2D" type="Camera2D" parent="."]
-process_callback = 0
-position_smoothing_enabled = true
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-2.5, -34)
 shape = SubResource("RectangleShape2D_kk8c0")
@@ -1144,7 +1139,7 @@ wait_time = 0.1
 one_shot = true
 
 [node name="GroundRayCast" type="RayCast2D" parent="."]
-target_position = Vector2(0, 250)
+target_position = Vector2(0, 1000)
 
 [node name="AttackArea" type="Area2D" parent="."]
 collision_mask = 4

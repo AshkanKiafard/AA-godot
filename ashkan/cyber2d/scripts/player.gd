@@ -54,8 +54,8 @@ const GRUNT_AUDIOS = {
 	preload("res://assets/audio/characters/Biker/grunting_8_sean.wav")]
 }
 
-const SPEED = 350.0
-const JUMP_VELOCITY = -400.0
+const SPEED = 300.0
+const JUMP_VELOCITY = -300.0
 var jump_count = 0
 var jump_available = true
 
@@ -134,14 +134,13 @@ func handle_movement(delta):
 	else:
 		jump_count = 0
 		shout = true
-		
+	
 	# Handle jump
-	# TODO add coyote time
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
 			jump_count = 0
 		jump_count += 1
-		if jump_count <= 3:
+		if jump_count <= 3 and (stamina > 25 or jump_count == 1) :
 			if jump_count == 1:
 				play_anim("jump", false, false)
 			else:
@@ -150,9 +149,10 @@ func handle_movement(delta):
 				play_voice(1, choose(GRUNT_AUDIOS["jump"]))
 			stamina -= 25
 			velocity.y = JUMP_VELOCITY - (stamina * 2)
-
+	
 	# Get the input direction and handle the movement/deceleration.
 	x_direction = Input.get_axis("move_left", "move_right")
+	flip_sprites()
 	
 	var regen_stamina = true
 	attack = Input.is_action_pressed("attack") and stamina > 0 and (hurt_timer.is_stopped() or !armed)
@@ -177,14 +177,14 @@ func handle_movement(delta):
 			x_speed += 100 + stamina
 			stamina -= 0.2
 		if Input.is_action_just_pressed("dash") and stamina > 50:
+			collision_layer = 10
+			collision_mask = 1
 			frame_freeze(0.1, 0.2)
 			play_voice(1+randf_range(-0.05, 0.05), WOO_AUDIO)
 			play_anim("dash", false, false)
 			regen_stamina = false
 			stamina -= 75
 		if is_dashing():
-			collision_layer = 10
-			collision_mask = 1
 			x_speed *= 10
 		else:
 			collision_layer = 2
@@ -226,22 +226,6 @@ func play_anim(anim:String, is_attacking: bool, melee: bool):
 	hand_sprite.visible = false
 	legs_sprite.visible = false
 	
-	# flip sprites
-	var flip_h = false if x_direction == 1 else true if x_direction == -1 else player_sprite.flip_h
-	if player_sprite.flip_h != flip_h:
-		player_sprite.flip_h = flip_h
-		weapon_sprite.flip_h = flip_h
-		hand_sprite.flip_h = flip_h
-		legs_sprite.flip_h = flip_h
-		# correct the sprite offset
-		player_sprite.position.x += 40 * x_direction
-		weapon_sprite.position.x += 40 * x_direction
-		legs_sprite.position.x += 40 * x_direction
-		hand_sprite.position.x += 20 * x_direction
-		hand_sprite.rotation += 45 * x_direction
-		attack_area.position.x += 50 * x_direction
-		attack_area_armed.position.x += 70 * x_direction
-	
 	# can't attack when jump-/dashing
 	if "jump" in anim or "dash" in anim:
 		hurt_timer.stop()
@@ -271,7 +255,7 @@ func play_anim(anim:String, is_attacking: bool, melee: bool):
 				legs_sprite.visible = true
 				weapon_sprite.play("idle_attack")
 				legs_sprite.play("walk")
-				player_sprite.position.y -= 10
+				player_sprite.position.y -= 11
 	
 	# sync
 	if anim == last_anim and (last_melee != melee or last_attack != attack):
@@ -315,3 +299,20 @@ func frame_freeze(time_scale, duration):
 	Engine.time_scale = time_scale
 	await get_tree().create_timer(duration*time_scale).timeout
 	Engine.time_scale = 1
+	
+func flip_sprites():
+	# flip sprites
+	var flip_h = false if x_direction == 1 else true if x_direction == -1 else player_sprite.flip_h
+	if player_sprite.flip_h != flip_h:
+		player_sprite.flip_h = flip_h
+		weapon_sprite.flip_h = flip_h
+		hand_sprite.flip_h = flip_h
+		legs_sprite.flip_h = flip_h
+		# correct the sprite offset
+		player_sprite.position.x += 40 * x_direction
+		weapon_sprite.position.x += 40 * x_direction
+		legs_sprite.position.x += 40 * x_direction
+		hand_sprite.position.x += 20 * x_direction
+		hand_sprite.rotation += 45 * x_direction
+		attack_area.position.x += 50 * x_direction
+		attack_area_armed.position.x += 70 * x_direction
