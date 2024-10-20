@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://ck4jhstpbjecu"]
+[gd_scene load_steps=39 format=3 uid="uid://ck4jhstpbjecu"]
 
 [ext_resource type="Script" path="res://scripts/zombie.gd" id="1_kw1yg"]
 [ext_resource type="Texture2D" uid="uid://c4535s3b17pol" path="res://assets/sprites/enemies/zombie/healthbarProgress.png" id="2_462em"]
@@ -162,7 +162,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"death",
-"speed": 7.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -208,6 +208,29 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_rxkqp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e35tw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jkomu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_db5a7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fpkju")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vinqj")
+}],
+"loop": false,
+"name": &"wake_up",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_rij7q")
 }, {
 "duration": 1.0,
@@ -235,6 +258,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4047p"]
 size = Vector2(13, 35)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l53l0"]
+size = Vector2(13, 35)
+
 [node name="Zombie" type="CharacterBody2D" groups=["Enemy"]]
 collision_layer = 4
 collision_mask = 3
@@ -253,7 +279,7 @@ texture_progress = ExtResource("2_462em")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_gfk5d")
-animation = &"attack"
+animation = &"wake_up"
 
 [node name="AttackArea" type="Area2D" parent="."]
 position = Vector2(-10.5, 6.5)
@@ -272,6 +298,11 @@ position = Vector2(-10, -7)
 target_position = Vector2(200, 0)
 collision_mask = 2
 
+[node name="VisionRayCast2" type="RayCast2D" parent="."]
+position = Vector2(-10, -7)
+target_position = Vector2(100, -30)
+collision_mask = 2
+
 [node name="AttackRangeRayCast" type="RayCast2D" parent="."]
 position = Vector2(-10, -7)
 target_position = Vector2(10, 0)
@@ -285,5 +316,16 @@ target_position = Vector2(50, 40)
 wait_time = 0.1
 one_shot = true
 
+[node name="StunArea" type="Area2D" parent="."]
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StunArea"]
+position = Vector2(-10.5, 6.5)
+shape = SubResource("RectangleShape2D_l53l0")
+
+[node name="StunTimer" type="Timer" parent="."]
+
 [connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
 [connection signal="body_exited" from="AttackArea" to="." method="_on_attack_area_body_exited"]
+[connection signal="body_entered" from="StunArea" to="." method="_on_stun_area_body_entered"]
+[connection signal="timeout" from="StunTimer" to="." method="_on_stun_timer_timeout"]
