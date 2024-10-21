@@ -1148,7 +1148,7 @@ size = Vector2(26, 68)
 [sub_resource type="CircleShape2D" id="CircleShape2D_ruglq"]
 
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
-collision_layer = 2
+collision_layer = 10
 collision_mask = 5
 script = ExtResource("1_muq57")
 armed = true
@@ -1174,9 +1174,8 @@ texture_filter = 1
 position = Vector2(18.5, -48)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_rryn4")
-animation = &"special"
+animation = &"idle_attack"
 autoplay = "idle"
-frame = 5
 
 [node name="Legs" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -1217,6 +1216,13 @@ collision_mask = 4
 position = Vector2(34.5, -38.5)
 scale = Vector2(2, 2)
 shape = SubResource("CircleShape2D_ruglq")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -182)
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
 
 [connection signal="timeout" from="GruntTimer" to="." method="_on_grunt_timer_timeout"]
 [connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]

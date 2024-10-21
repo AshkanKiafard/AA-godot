@@ -1,7 +1,13 @@
 class_name Player
 extends CharacterBody2D
 
+@export var game_manager: Node
 @export var armed: bool
+# camera shake
+@export var rand_strength: float = 20.0
+@export var shake_fade: float = 10.0
+var shake_strength: float = 0.0
+
 @onready var player_sprite: AnimatedSprite2D = $PlayerSprite
 @onready var weapon_sprite: AnimatedSprite2D = $MeleeWeapon
 @onready var hand_sprite: Sprite2D = $Hand
@@ -109,6 +115,10 @@ func _physics_process(delta: float) -> void:
 		velocity.x = 0
 		move_and_slide()
 		return
+	# shake camera
+	if shake_strength > 0:
+		shake_strength = lerpf(shake_strength,0,shake_fade*delta)
+		$Camera2D.offset = rand_offset()
 	handle_movement(delta)
 	handle_combat()
 	handle_animation()
@@ -118,10 +128,15 @@ func handle_combat():
 		if attack:
 			enemy.attack_side = 1 if position.x <= enemy.position.x else 0
 			if !armed and stamina > 80:
-				stamina -= 70
-				enemy.knockback = true
-				frame_freeze(0.1, 0.4)
-			enemy.health -= 0.5 if armed else 0.1
+				if player_sprite.frame == 4 or player_sprite.frame == 7:
+					frame_freeze(0.1, 0.4)
+					stamina -= 70
+					enemy.knockback = true
+					enemy.health -= 80
+					game_manager.play_praise_voice(enemy.health)
+					apply_shake()
+			else:
+				enemy.health -= 0.5 if armed else 0.1
 	
 	if Input.is_action_just_pressed("swap_weapon"):
 		armed = !armed
@@ -182,7 +197,6 @@ func handle_movement(delta):
 			x_speed += 100 + stamina
 			stamina -= 0.2
 		if Input.is_action_just_pressed("dash") and stamina > 50:
-			collision_layer = 10
 			collision_mask = 1
 			frame_freeze(0.1, 0.2)
 			play_voice(1+randf_range(-0.05, 0.05), WOO_AUDIO)
@@ -192,7 +206,6 @@ func handle_movement(delta):
 		if is_dashing():
 			x_speed *= 10
 		else:
-			collision_layer = 2
 			collision_mask = 5
 		velocity.x = x_direction * x_speed
 		if regen_stamina:
@@ -321,3 +334,11 @@ func flip_sprites():
 		hand_sprite.rotation += 45 * x_direction
 		attack_area.position.x += 50 * x_direction
 		attack_area_armed.position.x += 70 * x_direction
+
+func apply_shake():
+	shake_strength = rand_strength
+
+func rand_offset():
+	return Vector2(randf_range(-shake_strength, shake_strength),
+	randf_range(-shake_strength, shake_strength))
+	

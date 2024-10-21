@@ -11,6 +11,7 @@ extends CharacterBody2D
 @onready var attack_area: Area2D = $AttackArea
 @onready var health_bar: TextureProgressBar = $HealthBar
 @onready var stun_timer: Timer = $StunTimer
+@onready var blood: AnimatedSprite2D = $Blood
 
 var collided_players: Array
 var attack_side: int
@@ -120,6 +121,8 @@ func handle_animation():
 		if animated_sprite.flip_h != flip_h:
 			animated_sprite.flip_h = not animated_sprite.flip_h
 			animated_sprite.position.x += 20 * direction
+			blood.flip_h = animated_sprite.flip_h
+			blood.position.x -= 20 * direction
 			attack_area.position.x += 20 * direction
 			vision_ray_cast.target_position.x *= -1
 			vision_ray_cast2.target_position.x *= -1
@@ -130,7 +133,9 @@ func handle_animation():
 		WALK: animated_sprite.play("walk")
 		CHASE: animated_sprite.play("walk")
 		ATTACK: animated_sprite.play("attack")
-		HURT: animated_sprite.play("hurt")
+		HURT: 
+			animated_sprite.play("hurt")
+			blood.play("1")
 		EAT: animated_sprite.play("eat")
 		STUN: animated_sprite.play("death")
 		WAKE_UP: animated_sprite.play("wake_up")

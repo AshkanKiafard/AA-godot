@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://ck4jhstpbjecu"]
+[gd_scene load_steps=47 format=3 uid="uid://ck4jhstpbjecu"]
 
 [ext_resource type="Script" path="res://scripts/zombie.gd" id="1_kw1yg"]
 [ext_resource type="Texture2D" uid="uid://c4535s3b17pol" path="res://assets/sprites/enemies/zombie/healthbarProgress.png" id="2_462em"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://c3qtnpdgcmrhl" path="res://assets/sprites/enemies/zombie/Hurt.png" id="4_ahf7q"]
 [ext_resource type="Texture2D" uid="uid://boa4op0tn1ftq" path="res://assets/sprites/enemies/zombie/Idle.png" id="5_6huue"]
 [ext_resource type="Texture2D" uid="uid://chpn28j3tc866" path="res://assets/sprites/enemies/zombie/Walk.png" id="6_4l1a5"]
+[ext_resource type="Texture2D" uid="uid://ky4lqri3us4k" path="res://assets/sprites/effects/blood/8.png" id="8_e2ldr"]
+[ext_resource type="Texture2D" uid="uid://8vsxkhpbxddj" path="res://assets/sprites/effects/blood/3.png" id="9_1wuyr"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_202il"]
 atlas = ExtResource("2_tm5hm")
@@ -253,6 +255,49 @@ animations = [{
 "speed": 6.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_8om6f"]
+atlas = ExtResource("8_e2ldr")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ffoo4"]
+atlas = ExtResource("8_e2ldr")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bcdsv"]
+atlas = ExtResource("8_e2ldr")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_00hr4"]
+atlas = ExtResource("8_e2ldr")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tuilc"]
+atlas = ExtResource("9_1wuyr")
+region = Rect2(156, 0, 3, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_aan77"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8om6f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ffoo4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bcdsv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00hr4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tuilc")
+}],
+"loop": false,
+"name": &"1",
+"speed": 7.0
+}]
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_wxur2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4047p"]
@@ -263,7 +308,7 @@ size = Vector2(13, 35)
 
 [node name="Zombie" type="CharacterBody2D" groups=["Enemy"]]
 collision_layer = 4
-collision_mask = 3
+collision_mask = 7
 script = ExtResource("1_kw1yg")
 
 [node name="HealthBar" type="TextureProgressBar" parent="."]
@@ -279,7 +324,14 @@ texture_progress = ExtResource("2_462em")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_gfk5d")
-animation = &"wake_up"
+animation = &"hurt"
+
+[node name="Blood" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-19, -8)
+sprite_frames = SubResource("SpriteFrames_aan77")
+animation = &"1"
+frame = 4
 
 [node name="AttackArea" type="Area2D" parent="."]
 position = Vector2(-10.5, 6.5)
