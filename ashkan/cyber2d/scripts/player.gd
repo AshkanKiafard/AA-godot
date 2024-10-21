@@ -118,6 +118,7 @@ func handle_combat():
 		if attack:
 			enemy.attack_side = 1 if position.x <= enemy.position.x else 0
 			if !armed and stamina > 80:
+				stamina -= 70
 				enemy.knockback = true
 				frame_freeze(0.1, 0.4)
 			enemy.health -= 0.5 if armed else 0.1
