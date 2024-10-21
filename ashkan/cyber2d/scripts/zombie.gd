@@ -18,7 +18,6 @@ var speed = walk_speed
 
 var health = 100: 
 	set(value):
-		print(state)
 		if state != DEAD:
 			if value <= 0 and health > 0:
 				state = DEAD
@@ -36,7 +35,10 @@ var health = 100:
 var taken_damage = 0
 
 enum {IDLE, WALK, CHASE, ATTACK, HURT, DEAD, EAT, STUN, WAKE_UP}
-var state
+var state = IDLE:
+	set(new_state):
+		if state != DEAD and is_on_floor():
+			state = new_state
 
 var direction
 var knockback
@@ -102,8 +104,8 @@ func handle_movement(delta) -> void:
 		HURT: 
 			if knockback:
 				direction = 1 if attack_side else -1
-				speed = 300
-				velocity.y = -100
+				speed = 500
+				velocity.y = -500
 				knockback = false
 		
 		_: direction = 0
@@ -164,5 +166,4 @@ func ray_cast_sees_player(ray_cast: RayCast2D):
 	return ray_cast.is_colliding() and ray_cast.get_collider() is Player
 
 func _on_hurt_timer_timeout() -> void:
-	if state != DEAD:
-		state = IDLE
+	state = IDLE

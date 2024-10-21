@@ -1,4 +1,4 @@
-[gd_scene load_steps=204 format=4 uid="uid://m7omfoffxmf0"]
+[gd_scene load_steps=205 format=4 uid="uid://m7omfoffxmf0"]
 
 [ext_resource type="Texture2D" uid="uid://7qddiafm4fkc" path="res://assets/sprites/environment/tiles/Tile_01.png" id="1_asj80"]
 [ext_resource type="Texture2D" uid="uid://bi42dsdifqv2q" path="res://assets/sprites/environment/background/night/1.png" id="1_yvuiv"]
@@ -745,6 +745,9 @@ sources/94 = SubResource("TileSetAtlasSource_rnatb")
 sources/95 = SubResource("TileSetAtlasSource_lp7t4")
 sources/96 = SubResource("TileSetAtlasSource_7c4i8")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d0e6q"]
+size = Vector2(1066, 1053)
+
 [node name="Node" type="Node"]
 
 [node name="UI" type="CanvasLayer" parent="."]
@@ -839,3 +842,9 @@ limit_top = 0
 limit_bottom = 750
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(2099, 516.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_d0e6q")
