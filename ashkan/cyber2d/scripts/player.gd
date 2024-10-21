@@ -116,6 +116,8 @@ func _physics_process(delta: float) -> void:
 func handle_combat():
 	for enemy in collided_enemies:
 		if attack:
+			enemy.attack_side = 1 if position.x <= enemy.position.x else 0
+			enemy.knockback = !armed
 			enemy.health -= 0.5 if armed else 0.1
 	
 	if Input.is_action_just_pressed("swap_weapon"):

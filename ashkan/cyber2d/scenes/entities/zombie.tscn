@@ -313,7 +313,7 @@ position = Vector2(-10, -7)
 target_position = Vector2(50, 40)
 
 [node name="HurtTimer" type="Timer" parent="."]
-wait_time = 0.1
+wait_time = 0.5
 one_shot = true
 
 [node name="StunArea" type="Area2D" parent="."]
@@ -327,5 +327,6 @@ shape = SubResource("RectangleShape2D_l53l0")
 
 [connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
 [connection signal="body_exited" from="AttackArea" to="." method="_on_attack_area_body_exited"]
+[connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
 [connection signal="body_entered" from="StunArea" to="." method="_on_stun_area_body_entered"]
 [connection signal="timeout" from="StunTimer" to="." method="_on_stun_timer_timeout"]

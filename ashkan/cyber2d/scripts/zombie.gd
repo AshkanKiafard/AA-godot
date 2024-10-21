@@ -13,29 +13,33 @@ extends CharacterBody2D
 @onready var stun_timer: Timer = $StunTimer
 
 var collided_players: Array
+var attack_side: int
 var speed = walk_speed
 
 var health = 100: 
 	set(value):
-		if value <= 0 and health > 0:
-			state = DEAD
-			animated_sprite.play("death")
-			$CollisionShape2D.disabled = true
-			vision_ray_cast.enabled = false
-			vision_ray_cast2.enabled = false
-			ground_ray_cast.enabled = false
-			attack_range_ray_cast.enabled = false
-		if value < health - 0.1 and state != DEAD:
-			hurt_timer.start()
-			state = HURT
-		health = clamp(value, 0, 100)
-		health_bar.value = health
+		print(state)
+		if state != DEAD:
+			if value <= 0 and health > 0:
+				state = DEAD
+				animated_sprite.play("death")
+				$CollisionShape2D.disabled = true
+				vision_ray_cast.enabled = false
+				vision_ray_cast2.enabled = false
+				ground_ray_cast.enabled = false
+				attack_range_ray_cast.enabled = false
+			if value < health and state != DEAD and hurt_timer.is_stopped():
+				hurt_timer.start()
+				state = HURT
+			health = clamp(value, 0, 100)
+			health_bar.value = health
 var taken_damage = 0
 
 enum {IDLE, WALK, CHASE, ATTACK, HURT, DEAD, EAT, STUN, WAKE_UP}
 var state
 
 var direction
+var knockback
 
 func _ready() -> void:
 	state = IDLE
@@ -52,7 +56,7 @@ func _physics_process(delta: float) -> void:
 func brain():
 	if not hurt_timer.is_stopped() or not stun_timer.is_stopped():
 		return
-		
+	
 	if state in [IDLE, WALK]:
 		# change state
 		if not randi() % 10:
@@ -95,6 +99,13 @@ func handle_movement(delta) -> void:
 			speed = run_speed
 			direction = 1 if is_seeing_player() and get_seen_player().position.x > position.x else -1
 		
+		HURT: 
+			if knockback:
+				direction = 1 if attack_side else -1
+				speed = 300
+				velocity.y = -100
+				knockback = false
+		
 		_: direction = 0
 	
 	velocity.x = direction * speed
@@ -102,15 +113,16 @@ func handle_movement(delta) -> void:
 	move_and_slide()
 
 func handle_animation():
-	var flip_h = false if direction == 1 else true if direction == -1 else animated_sprite.flip_h
-	if animated_sprite.flip_h != flip_h:
-		animated_sprite.flip_h = not animated_sprite.flip_h
-		animated_sprite.position.x += 20 * direction
-		attack_area.position.x += 20 * direction
-		vision_ray_cast.target_position.x *= -1
-		vision_ray_cast2.target_position.x *= -1
-		attack_range_ray_cast.target_position.x *= -1
-		ground_ray_cast.target_position.x *= -1
+	if state != HURT:
+		var flip_h = false if direction == 1 else true if direction == -1 else animated_sprite.flip_h
+		if animated_sprite.flip_h != flip_h:
+			animated_sprite.flip_h = not animated_sprite.flip_h
+			animated_sprite.position.x += 20 * direction
+			attack_area.position.x += 20 * direction
+			vision_ray_cast.target_position.x *= -1
+			vision_ray_cast2.target_position.x *= -1
+			attack_range_ray_cast.target_position.x *= -1
+			ground_ray_cast.target_position.x *= -1
 	match state:
 		IDLE: animated_sprite.play("idle")
 		WALK: animated_sprite.play("walk")
@@ -130,7 +142,6 @@ func _on_attack_area_body_exited(body: Node2D) -> void:
 		collided_players.remove_at(collided_players.find(body))
 
 func _on_stun_area_body_entered(body: Node2D) -> void:
-	print(body)
 	if body.is_in_group("Player") and state != DEAD:
 		state = STUN
 		stun_timer.start()
@@ -151,3 +162,7 @@ func get_seen_player():
 
 func ray_cast_sees_player(ray_cast: RayCast2D):
 	return ray_cast.is_colliding() and ray_cast.get_collider() is Player
+
+func _on_hurt_timer_timeout() -> void:
+	if state != DEAD:
+		state = IDLE
