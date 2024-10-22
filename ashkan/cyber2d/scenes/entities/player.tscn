@@ -993,9 +993,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_tyj78")
 }],
-"loop": true,
+"loop": false,
 "name": &"special",
-"speed": 5.0
+"speed": 7.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1174,8 +1174,10 @@ texture_filter = 1
 position = Vector2(18.5, -48)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_rryn4")
-animation = &"idle_attack"
+animation = &"special"
 autoplay = "idle"
+frame = 7
+frame_progress = 1.0
 
 [node name="Legs" type="AnimatedSprite2D" parent="."]
 texture_filter = 1

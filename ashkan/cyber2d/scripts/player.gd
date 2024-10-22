@@ -4,7 +4,6 @@ extends CharacterBody2D
 @export var game_manager: Node
 @export var armed: bool
 # camera shake
-@export var rand_strength: float = 20.0
 @export var shake_fade: float = 10.0
 var shake_strength: float = 0.0
 
@@ -108,6 +107,9 @@ func restore_stamina(value):
 
 func is_dashing():
 	return player_sprite.is_playing() and player_sprite.animation == "dash"
+	
+func is_special_attacking():
+	return player_sprite.is_playing() and player_sprite.animation == "special"
 
 func _physics_process(delta: float) -> void:
 	if dead:
@@ -134,7 +136,7 @@ func handle_combat():
 					enemy.knockback = true
 					enemy.health -= 80
 					game_manager.play_praise_voice(enemy.health)
-					apply_shake()
+					apply_shake(30)
 			else:
 				enemy.health -= 0.5 if armed else 0.1
 	
@@ -142,6 +144,9 @@ func handle_combat():
 		armed = !armed
 		$AttackArea/CollisionShape2D.disabled = armed
 		$AttackAreaArmed/CollisionShape2D.disabled = !armed
+	
+	if Input.is_action_just_pressed("special_attack"):
+		play_anim("special", false, false)
 
 func handle_movement(delta):
 	# Add the gravity.
@@ -198,7 +203,6 @@ func handle_movement(delta):
 			stamina -= 0.2
 		if Input.is_action_just_pressed("dash") and stamina > 50:
 			collision_mask = 1
-			frame_freeze(0.1, 0.2)
 			play_voice(1+randf_range(-0.05, 0.05), WOO_AUDIO)
 			play_anim("dash", false, false)
 			regen_stamina = false
@@ -244,8 +248,15 @@ func play_anim(anim:String, is_attacking: bool, melee: bool):
 	hand_sprite.visible = false
 	legs_sprite.visible = false
 	
-	# can't attack when jump-/dashing
-	if "jump" in anim or "dash" in anim:
+	if is_special_attacking():
+		weapon_sprite.visible = false
+		if player_sprite.frame > 5:
+			apply_shake(35)
+			frame_freeze(0.3, 0.3)
+		return
+		
+	# can't attack when jump-/dash-/specialing
+	if "jump" in anim or anim == "dash":
 		hurt_timer.stop()
 		melee = false
 	
@@ -335,8 +346,9 @@ func flip_sprites():
 		attack_area.position.x += 50 * x_direction
 		attack_area_armed.position.x += 70 * x_direction
 
-func apply_shake():
-	shake_strength = rand_strength
+# camera shake
+func apply_shake(strength):
+	shake_strength = strength
 
 func rand_offset():
 	return Vector2(randf_range(-shake_strength, shake_strength),
