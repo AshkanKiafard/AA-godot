@@ -284,7 +284,7 @@ func play_anim(anim:String, is_attacking: bool, melee: bool):
 				legs_sprite.visible = true
 				weapon_sprite.play("idle_attack")
 				legs_sprite.play("walk")
-				player_sprite.position.y -= 11
+				player_sprite.position.y -= 10
 	
 	# sync
 	if anim == last_anim and (last_melee != melee or last_attack != attack):

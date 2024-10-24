@@ -1,9 +1,10 @@
-[gd_scene load_steps=172 format=3 uid="uid://dutqxe2pw78fk"]
+[gd_scene load_steps=166 format=3 uid="uid://dutqxe2pw78fk"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_muq57"]
 [ext_resource type="Texture2D" uid="uid://b3h6glgw43dbs" path="res://assets/sprites/weapons/3 Attack/1.png" id="2_06whg"]
 [ext_resource type="Texture2D" uid="uid://bhj8cr358wafp" path="res://assets/sprites/characters/Biker/Hands/2.png" id="2_7rkaj"]
 [ext_resource type="Texture2D" uid="uid://c5vj8rr37i4d7" path="res://assets/sprites/characters/Biker/Biker_doublejump.png" id="2_sxy8p"]
+[ext_resource type="Texture2D" uid="uid://c32o68lf2pyse" path="res://assets/sprites/characters/Biker/Hands/3.png" id="3_4grbm"]
 [ext_resource type="Texture2D" uid="uid://bvecf7qwtempp" path="res://assets/sprites/characters/Biker/Biker_attack1.png" id="3_134qt"]
 [ext_resource type="Texture2D" uid="uid://chw4rief20hnx" path="res://assets/sprites/characters/Biker/Dash.png" id="3_caqfa"]
 [ext_resource type="Texture2D" uid="uid://cdciftqh4l1pe" path="res://assets/sprites/characters/Biker/Biker_idle.png" id="3_i1q2m"]
@@ -603,29 +604,29 @@ region = Rect2(192, 0, 48, 48)
 atlas = ExtResource("21_yhrbk")
 region = Rect2(240, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_pkf70"]
-atlas = ExtResource("8_kgxo4")
-region = Rect2(0, 0, 48, 38)
+[sub_resource type="AtlasTexture" id="AtlasTexture_c6cav"]
+atlas = ExtResource("20_4ilw1")
+region = Rect2(0, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_6hqpu"]
-atlas = ExtResource("8_kgxo4")
-region = Rect2(48, 0, 48, 38)
+[sub_resource type="AtlasTexture" id="AtlasTexture_fxk5h"]
+atlas = ExtResource("20_4ilw1")
+region = Rect2(48, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_obwh8"]
-atlas = ExtResource("8_kgxo4")
-region = Rect2(96, 0, 48, 38)
+[sub_resource type="AtlasTexture" id="AtlasTexture_ctgw2"]
+atlas = ExtResource("20_4ilw1")
+region = Rect2(96, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_0k07c"]
-atlas = ExtResource("8_kgxo4")
-region = Rect2(144, 0, 48, 38)
+[sub_resource type="AtlasTexture" id="AtlasTexture_7jbtm"]
+atlas = ExtResource("20_4ilw1")
+region = Rect2(144, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_nlpvb"]
-atlas = ExtResource("8_kgxo4")
-region = Rect2(192, 0, 48, 38)
+[sub_resource type="AtlasTexture" id="AtlasTexture_sekmc"]
+atlas = ExtResource("20_4ilw1")
+region = Rect2(192, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_7gd45"]
-atlas = ExtResource("8_kgxo4")
-region = Rect2(240, 0, 48, 38)
+[sub_resource type="AtlasTexture" id="AtlasTexture_2vfc4"]
+atlas = ExtResource("20_4ilw1")
+region = Rect2(240, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gk0cb"]
 atlas = ExtResource("20_4ilw1")
@@ -1045,22 +1046,22 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_pkf70")
+"texture": SubResource("AtlasTexture_c6cav")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_6hqpu")
+"texture": SubResource("AtlasTexture_fxk5h")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_obwh8")
+"texture": SubResource("AtlasTexture_ctgw2")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_0k07c")
+"texture": SubResource("AtlasTexture_7jbtm")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_nlpvb")
+"texture": SubResource("AtlasTexture_sekmc")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_7gd45")
+"texture": SubResource("AtlasTexture_2vfc4")
 }],
 "loop": true,
 "name": &"walk_attack_melee",
@@ -1090,56 +1091,6 @@ animations = [{
 "speed": 8.0
 }]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_peo7p"]
-atlas = ExtResource("20_4ilw1")
-region = Rect2(0, 38, 48, 10)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_44g3w"]
-atlas = ExtResource("20_4ilw1")
-region = Rect2(48, 38, 48, 10)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_rirhq"]
-atlas = ExtResource("20_4ilw1")
-region = Rect2(96, 38, 48, 10)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qp74b"]
-atlas = ExtResource("20_4ilw1")
-region = Rect2(144, 38, 48, 10)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8y88u"]
-atlas = ExtResource("20_4ilw1")
-region = Rect2(192, 38, 48, 10)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6uhx1"]
-atlas = ExtResource("20_4ilw1")
-region = Rect2(240, 38, 48, 10)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_dmcim"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_peo7p")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_44g3w")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rirhq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qp74b")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8y88u")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6uhx1")
-}],
-"loop": true,
-"name": &"walk",
-"speed": 5.0
-}]
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kk8c0"]
 size = Vector2(26, 68)
 
@@ -1153,38 +1104,36 @@ collision_mask = 5
 script = ExtResource("1_muq57")
 armed = true
 
-[node name="Hand" type="Sprite2D" parent="."]
+[node name="HandIdle" type="Sprite2D" parent="."]
 texture_filter = 1
 position = Vector2(8.99999, -42.5)
 rotation = 0.493916
 scale = Vector2(1.75, 1.75)
 texture = ExtResource("2_7rkaj")
 
+[node name="HandWalk" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(15, -41)
+scale = Vector2(2, 2)
+texture = ExtResource("3_4grbm")
+
 [node name="MeleeWeapon" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 position = Vector2(18.5, -48)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_2qdsw")
-animation = &"idle"
+animation = &"idle_attack"
 autoplay = "idle_attack"
-frame_progress = 0.15006
+frame = 4
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 position = Vector2(18.5, -48)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_rryn4")
-animation = &"walk_attack_melee"
+animation = &"idle_attack_melee"
 autoplay = "idle"
-frame_progress = 0.933656
-
-[node name="Legs" type="AnimatedSprite2D" parent="."]
-texture_filter = 1
-position = Vector2(18.5, -12)
-scale = Vector2(2, 2)
-sprite_frames = SubResource("SpriteFrames_dmcim")
-animation = &"walk"
-frame_progress = 0.10869
+frame = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-2.5, -34)
