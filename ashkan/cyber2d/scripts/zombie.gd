@@ -13,6 +13,7 @@ extends CharacterBody2D
 @onready var stun_timer: Timer = $StunTimer
 @onready var blood: AnimatedSprite2D = $Blood
 
+signal died
 var collided_players: Array
 var attack_side: int
 var speed = walk_speed
@@ -21,6 +22,7 @@ var health = 100:
 	set(value):
 		if state != DEAD:
 			if value <= 0 and health > 0:
+				died.emit()
 				state = DEAD
 				animated_sprite.play("death")
 				$CollisionShape2D.disabled = true
@@ -135,7 +137,8 @@ func handle_animation():
 		ATTACK: animated_sprite.play("attack")
 		HURT: 
 			animated_sprite.play("hurt")
-			blood.play("1")
+			if blood.frame == 4:
+				blood.play(str(randi()%4+1))
 		EAT: animated_sprite.play("eat")
 		STUN: animated_sprite.play("death")
 		WAKE_UP: animated_sprite.play("wake_up")
@@ -148,8 +151,8 @@ func _on_attack_area_body_exited(body: Node2D) -> void:
 	if body.is_in_group("Player"):
 		collided_players.remove_at(collided_players.find(body))
 
-func _on_stun_area_body_entered(body: Node2D) -> void:
-	if body.is_in_group("Player") and state != DEAD:
+func _on_stun_area_body_entered(_body: Node2D) -> void:
+	if state != DEAD and stun_timer.is_stopped():
 		state = STUN
 		stun_timer.start()
 

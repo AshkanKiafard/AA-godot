@@ -17,6 +17,7 @@ var shake_strength: float = 0.0
 @onready var attack_area: Area2D = $AttackArea
 @onready var attack_area_armed: Area2D = $AttackAreaArmed
 @onready var hurt_timer: Timer = $HurtTimer
+@onready var blood: AnimatedSprite2D = $Blood
 
 var collided_enemies: Array
 
@@ -58,6 +59,7 @@ const GRUNT_AUDIOS = {
 	preload("res://assets/audio/characters/Biker/grunting_7_sean.wav"),
 	preload("res://assets/audio/characters/Biker/grunting_8_sean.wav")]
 }
+const SHOCK_WAVE = preload("res://scenes/objects/shock_wave.tscn")
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -300.0
@@ -72,6 +74,8 @@ var last_anim
 var last_melee
 var last_attack
 var attack
+
+var announce
 
 var shout = true
 var grunt = true
@@ -121,13 +125,14 @@ func _physics_process(delta: float) -> void:
 	if shake_strength > 0:
 		shake_strength = lerpf(shake_strength,0,shake_fade*delta)
 		$Camera2D.offset = rand_offset()
-	handle_movement(delta)
 	handle_combat()
+	handle_movement(delta)
 	handle_animation()
 
 func handle_combat():
-	for enemy in collided_enemies:
-		if attack:
+	if len(collided_enemies) >= 1:
+		var enemy = choose(collided_enemies)
+		if attack and enemy.health > 0:
 			enemy.attack_side = 1 if position.x <= enemy.position.x else 0
 			if !armed and stamina > 80:
 				if player_sprite.frame == 4 or player_sprite.frame == 7:
@@ -136,9 +141,9 @@ func handle_combat():
 					enemy.knockback = true
 					enemy.health -= 80
 					game_manager.play_praise_voice(enemy.health)
-					apply_shake(30)
+					apply_shake(20)
 			else:
-				enemy.health -= 0.5 if armed else 0.1
+				enemy.health -= 1 if armed else 0.5
 	
 	if Input.is_action_just_pressed("swap_weapon"):
 		armed = !armed
@@ -218,7 +223,10 @@ func handle_movement(delta):
 		if regen_stamina:
 			restore_stamina(1)
 		velocity.x = move_toward(velocity.x, 0, SPEED)
-
+	
+	if is_special_attacking():
+		velocity.x = 0
+	
 	move_and_slide()
 
 func handle_animation():
@@ -239,6 +247,9 @@ func handle_animation():
 				play_anim("jump", false, false)
 	else:
 		play_anim("hurt", false, false)
+		if blood.frame == 4:
+			apply_shake(1)
+			blood.play(str(randi()%4+1))
 		hand_sprite.visible = true
 		weapon_sprite.visible = armed
 
@@ -248,12 +259,29 @@ func play_anim(anim:String, is_attacking: bool, melee: bool):
 	hand_sprite.visible = false
 	legs_sprite.visible = false
 	
-	if is_special_attacking():
+	if is_special_attacking() and !dead:
 		weapon_sprite.visible = false
 		if player_sprite.frame > 5:
-			apply_shake(35)
+			if announce:
+				announce = false
+				game_manager.play_praise_voice(100)
+			apply_shake(30)
 			frame_freeze(0.3, 0.3)
+			var shock_wave1 = SHOCK_WAVE.instantiate()
+			shock_wave1.direction = 1
+			var shock_wave2 = SHOCK_WAVE.instantiate()
+			shock_wave2.direction = -1
+			if not player_sprite.flip_h:
+				shock_wave1.position = Vector2(position.x + 100, position.y)
+				shock_wave2.position = Vector2(position.x - 50, position.y)
+			else:
+				shock_wave1.position = Vector2(position.x + 50, position.y)
+				shock_wave2.position = Vector2(position.x - 100, position.y)
+			get_tree().root.add_child(shock_wave1)
+			get_tree().root.add_child(shock_wave2)
 		return
+	else:
+		announce = true
 		
 	# can't attack when jump-/dash-/specialing
 	if "jump" in anim or anim == "dash":
@@ -267,8 +295,8 @@ func play_anim(anim:String, is_attacking: bool, melee: bool):
 	
 	player_sprite.play(anim+attack_str+melee_str)
 	
-	# walk does not have an melee attack animation
 	if melee:
+		# walk does not have melee animations
 		if anim != "walk":
 			weapon_sprite.play(anim+attack_str)
 		elif anim == "walk":
@@ -337,10 +365,12 @@ func flip_sprites():
 		weapon_sprite.flip_h = flip_h
 		hand_sprite.flip_h = flip_h
 		legs_sprite.flip_h = flip_h
+		blood.flip_h = flip_h
 		# correct the sprite offset
 		player_sprite.position.x += 40 * x_direction
 		weapon_sprite.position.x += 40 * x_direction
 		legs_sprite.position.x += 40 * x_direction
+		blood.position.x -= 45 * x_direction
 		hand_sprite.position.x += 20 * x_direction
 		hand_sprite.rotation += 45 * x_direction
 		attack_area.position.x += 50 * x_direction
@@ -351,6 +381,5 @@ func apply_shake(strength):
 	shake_strength = strength
 
 func rand_offset():
-	return Vector2(randf_range(-shake_strength, shake_strength),
-	randf_range(-shake_strength, shake_strength))
+	return Vector2(randf_range(-shake_strength, shake_strength), 0)
 	

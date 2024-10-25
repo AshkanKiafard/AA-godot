@@ -15,6 +15,10 @@ run/main_scene="res://scenes/levels/main.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
+[display]
+
+window/size/mode=2
+
 [global_group]
 
 Enemy=""
@@ -71,3 +75,5 @@ special_attack={
 2d_physics/layer_1="Env"
 2d_physics/layer_2="Player"
 2d_physics/layer_3="Enemy"
+2d_physics/layer_4="Stun"
+2d_physics/layer_5="Objects"
