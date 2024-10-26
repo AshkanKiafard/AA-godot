@@ -434,7 +434,7 @@ texture_progress = ExtResource("2_462em")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_gfk5d")
-animation = &"hurt"
+animation = &"walk"
 
 [node name="Blood" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -448,7 +448,8 @@ position = Vector2(-10.5, 6.5)
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
-position = Vector2(9.5, -6.5)
+position = Vector2(10.5, -6.5)
+scale = Vector2(1.25, 1.25)
 shape = SubResource("CircleShape2D_wxur2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -467,7 +468,7 @@ collision_mask = 2
 
 [node name="AttackRangeRayCast" type="RayCast2D" parent="."]
 position = Vector2(-10, -7)
-target_position = Vector2(10, 0)
+target_position = Vector2(20, 0)
 collision_mask = 2
 
 [node name="GroundRayCast" type="RayCast2D" parent="."]

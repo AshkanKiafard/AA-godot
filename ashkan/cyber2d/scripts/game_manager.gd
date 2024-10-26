@@ -57,6 +57,8 @@ func play_praise_voice(enemy_health):
 	announcer_text.visible = false
 
 func start_next_wave():
+	if pumpkin.animation == "close":
+		pumpkin.play("open")
 	await get_tree().create_timer(1).timeout
 	spawn_count += 1
 	enemies_remaining.text = str(spawn_count - enemies_killed_count) + " remaining"
@@ -66,8 +68,6 @@ func start_next_wave():
 
 func spawn():
 	for i in spawn_count:
-		if pumpkin.animation == "close":
-			pumpkin.play("open")
 		var zombie = ZOMBIE.instantiate()
 		zombie.direction = -1
 		zombie.position = pumpkin.position

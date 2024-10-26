@@ -755,7 +755,7 @@ sources/95 = SubResource("TileSetAtlasSource_lp7t4")
 sources/96 = SubResource("TileSetAtlasSource_7c4i8")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lhj61"]
-size = Vector2(45, 544)
+size = Vector2(32, 544)
 
 [node name="Node" type="Node"]
 
@@ -929,8 +929,6 @@ centered = false
 
 [node name="Pumpkin" parent="." instance=ExtResource("108_42o7j")]
 position = Vector2(2101, 561)
-animation = &"close"
-frame_progress = 0.0
 
 [node name="Vine1" type="Sprite2D" parent="Pumpkin"]
 texture_filter = 1
@@ -955,20 +953,10 @@ tile_set = SubResource("TileSet_ps2ev")
 
 [node name="Area2D" type="Area2D" parent="TileMapLayer"]
 position = Vector2(29, -659)
-collision_mask = 2
 script = ExtResource("111_lobcc")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TileMapLayer/Area2D"]
-position = Vector2(626.5, 387)
-shape = SubResource("RectangleShape2D_lhj61")
-
-[node name="Area2D2" type="Area2D" parent="TileMapLayer"]
-position = Vector2(1662, -660)
-collision_mask = 2
-script = ExtResource("111_lobcc")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="TileMapLayer/Area2D2"]
-position = Vector2(626.5, 387)
+position = Vector2(627, 387)
 shape = SubResource("RectangleShape2D_lhj61")
 
 [node name="Player" parent="." node_paths=PackedStringArray("game_manager") instance=ExtResource("98_oc4sv")]
@@ -977,4 +965,3 @@ game_manager = NodePath("../GameManager")
 
 [connection signal="timeout" from="GameManager/WaveTimer" to="GameManager" method="_on_wave_timer_timeout"]
 [connection signal="body_entered" from="TileMapLayer/Area2D" to="TileMapLayer/Area2D" method="_on_body_entered"]
-[connection signal="body_entered" from="TileMapLayer/Area2D2" to="TileMapLayer/Area2D2" method="_on_body_entered"]

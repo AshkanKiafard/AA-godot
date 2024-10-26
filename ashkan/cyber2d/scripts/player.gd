@@ -64,7 +64,6 @@ const SHOCK_WAVE = preload("res://scenes/objects/shock_wave.tscn")
 const SPEED = 300.0
 const JUMP_VELOCITY = -300.0
 var jump_count = 0
-var jump_available = true
 
 var x_direction
 var x_speed
@@ -92,8 +91,6 @@ var health := 100.0 :
 				play_voice(1, choose(DEATH_AUDIOS))
 				play_anim("death", false, false)
 			if value < health and value > 0 and not dead:
-				if hurt_timer.is_stopped():
-					play_voice(1, choose(DAMAGE_AUDIOS))
 				if is_on_floor():
 					hurt_timer.start()
 			health = clamp(value, 0, 100)
@@ -134,16 +131,29 @@ func handle_combat():
 		var enemy = choose(collided_enemies)
 		if attack and enemy.health > 0:
 			enemy.attack_side = 1 if position.x <= enemy.position.x else 0
-			if !armed and stamina > 80:
-				if player_sprite.frame == 4 or player_sprite.frame == 7:
-					frame_freeze(0.1, 0.4)
-					stamina -= 70
-					enemy.knockback = true
-					enemy.health -= 80
-					game_manager.play_praise_voice(enemy.health)
-					apply_shake(20)
+			if !armed:
+				enemy.knockback = true
+				if stamina > 80:
+					if player_sprite.frame == 4 or player_sprite.frame == 7:
+						frame_freeze(0.1, 0.4)
+						stamina -= 70
+						enemy.knockback_force_x = 500
+						enemy.knockback_force_y = 500
+						enemy.health -= 80
+						game_manager.play_praise_voice(enemy.health)
+						apply_shake(20)
+						collided_enemies.remove_at(collided_enemies.find(enemy))
+				else:
+					enemy.knockback_force_y = 0
+					if player_sprite.frame == 4 or player_sprite.frame == 7:
+						enemy.knockback_force_x = 10
+						apply_shake(1)
+					else:
+						enemy.knockback_force_x = 0
+					enemy.health -= 0.5
 			else:
-				enemy.health -= 1 if armed else 0.5
+				enemy.knockback = false
+				enemy.health -= 1
 	
 	if Input.is_action_just_pressed("swap_weapon"):
 		armed = !armed
@@ -192,7 +202,7 @@ func handle_movement(delta):
 			grunt = false
 			grunt_timer.wait_time = randf_range(2, 5)
 			grunt_timer.start()
-		stamina -= 0.1 if armed else 0.05
+		stamina -= 0.2 if armed else 0.1
 		regen_stamina = false
 	else:
 		grunt = true
@@ -248,9 +258,11 @@ func handle_animation():
 	else:
 		play_anim("hurt", false, false)
 		if blood.frame == 4:
-			apply_shake(1)
+			apply_shake(3)
+			if !voice.playing:
+				play_voice(1+randf_range(-0.05, 0.05), choose(DAMAGE_AUDIOS))
 			blood.play(str(randi()%4+1))
-		hand_sprite.visible = true
+		hand_sprite.visible = armed
 		weapon_sprite.visible = armed
 
 func play_anim(anim:String, is_attacking: bool, melee: bool):
@@ -341,7 +353,7 @@ func _on_attack_area_body_entered(body: Node2D) -> void:
 		collided_enemies.append(body)
 
 func _on_attack_area_body_exited(body: Node2D) -> void:
-	if body.is_in_group("Enemy"):
+	if body.is_in_group("Enemy") and body in collided_enemies:
 		collided_enemies.remove_at(collided_enemies.find(body))
 
 func _on_attack_area_armed_body_entered(body: Node2D) -> void:
@@ -349,7 +361,7 @@ func _on_attack_area_armed_body_entered(body: Node2D) -> void:
 		collided_enemies.append(body)
 
 func _on_attack_area_armed_body_exited(body: Node2D) -> void:
-	if body.is_in_group("Enemy"):
+	if body.is_in_group("Enemy") and body in collided_enemies:
 		collided_enemies.remove_at(collided_enemies.find(body))
 
 func frame_freeze(time_scale, duration):
@@ -382,4 +394,6 @@ func apply_shake(strength):
 
 func rand_offset():
 	return Vector2(randf_range(-shake_strength, shake_strength), 0)
-	
+
+func check_for_grabs():
+	pass

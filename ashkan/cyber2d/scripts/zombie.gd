@@ -45,6 +45,8 @@ var state = IDLE:
 
 var direction
 var knockback
+var knockback_force_x
+var knockback_force_y
 
 func _ready() -> void:
 	state = IDLE
@@ -107,8 +109,8 @@ func handle_movement(delta) -> void:
 		HURT: 
 			if knockback:
 				direction = 1 if attack_side else -1
-				speed = 500
-				velocity.y = -500
+				speed = knockback_force_x
+				velocity.y = -knockback_force_y
 				knockback = false
 		
 		_: direction = 0
