@@ -7,6 +7,7 @@ extends CharacterBody2D
 @export var shake_fade: float = 10.0
 var shake_strength: float = 0.0
 
+@onready var dash_particles: GPUParticles2D = $DashParticles2D
 @onready var player_sprite: AnimatedSprite2D = $PlayerSprite
 @onready var weapon_sprite: AnimatedSprite2D = $MeleeWeapon
 @onready var hand_sprite: Sprite2D = $Hand
@@ -83,13 +84,14 @@ signal health_changed
 var dead = false
 var health := 100.0 :
 	set(value):
-		if not is_dashing():
+		if not is_dashing() and !game_manager.game_over:
 			if value <= 0 and health > 0:
 				print("DEAD")
 				hurt_timer.stop()
 				dead = true
 				play_voice(1, choose(DEATH_AUDIOS))
 				play_anim("death", false, false)
+				game_manager.show_game_over()
 			if value < health and value > 0 and not dead:
 				if is_on_floor():
 					hurt_timer.start()
@@ -113,7 +115,7 @@ func is_special_attacking():
 	return player_sprite.is_playing() and player_sprite.animation == "special"
 
 func _physics_process(delta: float) -> void:
-	if dead:
+	if dead || game_manager.game_over:
 		velocity += get_gravity() * delta
 		velocity.x = 0
 		move_and_slide()
@@ -128,32 +130,42 @@ func _physics_process(delta: float) -> void:
 
 func handle_combat():
 	if len(collided_enemies) >= 1:
-		var enemy = choose(collided_enemies)
+		var enemy = collided_enemies[0]
 		if attack and enemy.health > 0:
+			enemy.knockback = true
+			enemy.knockback_force_y = 0
 			enemy.attack_side = 1 if position.x <= enemy.position.x else 0
+			var critical = 2 if randi() % 5 == 0 else 1
+			enemy.is_critical = true if critical == 2 else false
 			if !armed:
-				enemy.knockback = true
 				if stamina > 80:
 					if player_sprite.frame == 4 or player_sprite.frame == 7:
 						frame_freeze(0.1, 0.4)
 						stamina -= 70
 						enemy.knockback_force_x = 500
 						enemy.knockback_force_y = 500
-						enemy.health -= 80
+						enemy.is_critical = true
+						enemy.health -= 70 + randi_range(0, 5)
 						game_manager.play_praise_voice(enemy.health)
+						if enemy.health <= 0:
+							game_manager.play_sound_effect("res://assets/audio/combat/fist/ko/", 3)
+						else:
+							game_manager.play_sound_effect("res://assets/audio/combat/fist/superpunch/", 3)
 						apply_shake(20)
 						collided_enemies.remove_at(collided_enemies.find(enemy))
 				else:
+					game_manager.play_sound_effect("res://assets/audio/combat/fist/punch/", 4)
 					enemy.knockback_force_y = 0
 					if player_sprite.frame == 4 or player_sprite.frame == 7:
-						enemy.knockback_force_x = 10
+						enemy.knockback_force_x = 20
 						apply_shake(1)
 					else:
 						enemy.knockback_force_x = 0
-					enemy.health -= 0.5
+					enemy.health -= (0.3 + randi_range(0, 3) / 10.0) * critical
 			else:
-				enemy.knockback = false
-				enemy.health -= 1
+				game_manager.play_sound_effect("res://assets/audio/combat/melee/", 2)
+				enemy.knockback_force_x = 10
+				enemy.health -= (1.5 + randi_range(0, 10) / 10.0) * critical
 	
 	if Input.is_action_just_pressed("swap_weapon"):
 		armed = !armed
@@ -217,15 +229,17 @@ func handle_movement(delta):
 			x_speed += 100 + stamina
 			stamina -= 0.2
 		if Input.is_action_just_pressed("dash") and stamina > 50:
-			collision_mask = 1
 			play_voice(1+randf_range(-0.05, 0.05), WOO_AUDIO)
 			play_anim("dash", false, false)
 			regen_stamina = false
 			stamina -= 75
 		if is_dashing():
 			x_speed *= 10
+			collision_mask = 1
+			dash_particles.emitting = true
 		else:
 			collision_mask = 5
+			dash_particles.emitting = false
 		velocity.x = x_direction * x_speed
 		if regen_stamina:
 			restore_stamina(0.3)
@@ -236,6 +250,9 @@ func handle_movement(delta):
 	
 	if is_special_attacking():
 		velocity.x = 0
+		
+	if velocity.x == 0:
+		dash_particles.emitting = false
 	
 	move_and_slide()
 
@@ -372,6 +389,7 @@ func frame_freeze(time_scale, duration):
 func flip_sprites():
 	# flip sprites
 	var flip_h = false if x_direction == 1 else true if x_direction == -1 else player_sprite.flip_h
+	dash_particles.scale.x = 1 if x_direction == 1 else -1 if x_direction == -1 else dash_particles.scale.x 
 	if player_sprite.flip_h != flip_h:
 		player_sprite.flip_h = flip_h
 		weapon_sprite.flip_h = flip_h
@@ -385,8 +403,8 @@ func flip_sprites():
 		blood.position.x -= 45 * x_direction
 		hand_sprite.position.x += 20 * x_direction
 		hand_sprite.rotation += 45 * x_direction
-		attack_area.position.x += 50 * x_direction
-		attack_area_armed.position.x += 70 * x_direction
+		attack_area.position.x += 60 * x_direction
+		attack_area_armed.position.x += 80 * x_direction
 
 # camera shake
 func apply_shake(strength):

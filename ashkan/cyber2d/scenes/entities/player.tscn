@@ -1,4 +1,4 @@
-[gd_scene load_steps=194 format=3 uid="uid://dutqxe2pw78fk"]
+[gd_scene load_steps=199 format=3 uid="uid://dutqxe2pw78fk"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_muq57"]
 [ext_resource type="Texture2D" uid="uid://b3h6glgw43dbs" path="res://assets/sprites/weapons/3 Attack/1.png" id="2_06whg"]
@@ -29,6 +29,52 @@
 [ext_resource type="Texture2D" uid="uid://y8kwbapkerc8" path="res://assets/sprites/effects/blood/1.png" id="26_rs4x5"]
 [ext_resource type="Texture2D" uid="uid://8vsxkhpbxddj" path="res://assets/sprites/effects/blood/3.png" id="27_bv3jy"]
 [ext_resource type="Texture2D" uid="uid://dmf83f245nqw0" path="res://assets/sprites/effects/blood/7.png" id="29_mluer"]
+
+[sub_resource type="Shader" id="Shader_4n3pw"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.3.stable's CanvasItemMaterial.
+
+shader_type canvas_item;
+render_mode blend_mix;
+uniform int particles_anim_h_frames;
+uniform int particles_anim_v_frames;
+uniform bool particles_anim_loop;
+
+void vertex() {
+	float h_frames = float(particles_anim_h_frames);
+	float v_frames = float(particles_anim_v_frames);
+	VERTEX.xy /= vec2(h_frames, v_frames);
+	float particle_total_frames = float(particles_anim_h_frames * particles_anim_v_frames);
+	float particle_frame = floor(INSTANCE_CUSTOM.z * float(particle_total_frames));
+	if (!particles_anim_loop) {
+		particle_frame = clamp(particle_frame, 0.0, particle_total_frames - 1.0);
+	} else {
+		particle_frame = mod(particle_frame, particle_total_frames);
+	}
+	vec2 scale_uv = UV / vec2(h_frames, v_frames);
+	UV = scale_uv + vec2(mod(particle_frame, h_frames) / h_frames, floor((particle_frame + 0.5) / h_frames) / v_frames);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mutsp"]
+shader = SubResource("Shader_4n3pw")
+shader_parameter/particles_anim_h_frames = 6
+shader_parameter/particles_anim_v_frames = 1
+shader_parameter/particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_svogm"]
+_data = [Vector2(0, 0.505494), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_1yo3x"]
+curve = SubResource("Curve_svogm")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dgc57"]
+gravity = Vector3(0, 0, 0)
+scale_min = 2.0
+scale_max = 2.0
+alpha_curve = SubResource("CurveTexture_1yo3x")
+anim_speed_min = 1.0
+anim_speed_max = 1.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cgshq"]
 atlas = ExtResource("12_miijn")
@@ -207,19 +253,19 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_rmxd8"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_nnl8i"]
 atlas = ExtResource("3_caqfa")
 region = Rect2(48, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_8uvqv"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_4rsoa"]
 atlas = ExtResource("3_caqfa")
 region = Rect2(96, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_0tt7i"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_ixssp"]
 atlas = ExtResource("3_caqfa")
 region = Rect2(144, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_r3sse"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_0nrd7"]
 atlas = ExtResource("3_caqfa")
 region = Rect2(192, 0, 48, 48)
 
@@ -659,16 +705,16 @@ region = Rect2(240, 0, 48, 48)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_rmxd8")
+"texture": SubResource("AtlasTexture_nnl8i")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_8uvqv")
+"texture": SubResource("AtlasTexture_4rsoa")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_0tt7i")
+"texture": SubResource("AtlasTexture_ixssp")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_r3sse")
+"texture": SubResource("AtlasTexture_0nrd7")
 }],
 "loop": false,
 "name": &"dash",
@@ -1309,7 +1355,17 @@ collision_mask = 5
 script = ExtResource("1_muq57")
 armed = true
 
+[node name="DashParticles2D" type="GPUParticles2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_mutsp")
+position = Vector2(-2, -48)
+emitting = false
+process_material = SubResource("ParticleProcessMaterial_dgc57")
+texture = ExtResource("3_caqfa")
+lifetime = 0.5
+
 [node name="Hand" type="Sprite2D" parent="."]
+visible = false
 texture_filter = 1
 position = Vector2(8.99999, -42.5)
 rotation = 0.493916
@@ -1317,6 +1373,7 @@ scale = Vector2(1.75, 1.75)
 texture = ExtResource("2_7rkaj")
 
 [node name="MeleeWeapon" type="AnimatedSprite2D" parent="."]
+visible = false
 texture_filter = 1
 position = Vector2(18.5, -48)
 scale = Vector2(2, 2)
@@ -1327,13 +1384,14 @@ frame_progress = 0.15006
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
-position = Vector2(18.5, -48)
+position = Vector2(19, -48)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_rryn4")
-animation = &"special"
+animation = &"dash"
 autoplay = "idle"
 
 [node name="Legs" type="AnimatedSprite2D" parent="."]
+visible = false
 z_index = 1
 texture_filter = 1
 position = Vector2(18.5, -10)
@@ -1371,7 +1429,7 @@ target_position = Vector2(0, 1000)
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
-position = Vector2(25, -39.5)
+position = Vector2(29, -39)
 scale = Vector2(1.5, 1.5)
 shape = SubResource("CircleShape2D_lujby")
 
@@ -1379,7 +1437,7 @@ shape = SubResource("CircleShape2D_lujby")
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackAreaArmed"]
-position = Vector2(34.5, -38.5)
+position = Vector2(38.5, -38)
 scale = Vector2(2, 2)
 shape = SubResource("CircleShape2D_ruglq")
 

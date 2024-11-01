@@ -12,13 +12,14 @@ extends CharacterBody2D
 @onready var health_bar: TextureProgressBar = $HealthBar
 @onready var stun_timer: Timer = $StunTimer
 @onready var blood: AnimatedSprite2D = $Blood
+@onready var damage_numbers_origin: Node2D = $DamageNumbersOrigin
 
 signal died
 var collided_players: Array
 var attack_side: int
 var speed = walk_speed
 
-var health = 100: 
+var health = 100.0: 
 	set(value):
 		if state != DEAD:
 			if value <= 0 and health > 0:
@@ -30,12 +31,15 @@ var health = 100:
 				vision_ray_cast2.enabled = false
 				ground_ray_cast.enabled = false
 				attack_range_ray_cast.enabled = false
+				DamageNumbers.display_number((health - value)*10, damage_numbers_origin.global_position, is_critical)
 			if value < health and state != DEAD and hurt_timer.is_stopped():
 				hurt_timer.start()
 				state = HURT
+				DamageNumbers.display_number((health - value)*10, damage_numbers_origin.global_position, is_critical)
 			health = clamp(value, 0, 100)
 			health_bar.value = health
 var taken_damage = 0
+var is_critical = false
 
 enum {IDLE, WALK, CHASE, ATTACK, HURT, DEAD, EAT, STUN, WAKE_UP}
 var state = IDLE:
@@ -44,9 +48,9 @@ var state = IDLE:
 			state = new_state
 
 var direction
-var knockback
-var knockback_force_x
-var knockback_force_y
+var knockback = false
+var knockback_force_x = 0
+var knockback_force_y = 0
 
 func _ready() -> void:
 	state = IDLE
@@ -56,9 +60,9 @@ func _physics_process(delta: float) -> void:
 	for player in collided_players:
 		if state == ATTACK and !player.dead:
 			player.health -= 0.1
+	handle_animation()
 	brain()
 	handle_movement(delta)
-	handle_animation()
 
 func brain():
 	if not hurt_timer.is_stopped() or not stun_timer.is_stopped():
@@ -99,7 +103,7 @@ func handle_movement(delta) -> void:
 			speed = walk_speed
 			direction = -1 if animated_sprite.flip_h else 1
 			# change direction
-			if not ground_ray_cast.is_colliding() or not randi() % 20:
+			if not ground_ray_cast.is_colliding() or not randi() % 10:
 				direction *= -1
 		
 		CHASE: 
@@ -125,6 +129,7 @@ func handle_animation():
 		if animated_sprite.flip_h != flip_h:
 			animated_sprite.flip_h = not animated_sprite.flip_h
 			animated_sprite.position.x += 20 * direction
+			damage_numbers_origin.position.x -= 40 * direction
 			blood.flip_h = animated_sprite.flip_h
 			blood.position.x -= 20 * direction
 			attack_area.position.x += 20 * direction
