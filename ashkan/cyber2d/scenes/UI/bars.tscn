@@ -1,0 +1,81 @@
+[gd_scene load_steps=12 format=3 uid="uid://bstpt6upc38fa"]
+
+[ext_resource type="Script" path="res://scripts/bars.gd" id="1_xbqk1"]
+[ext_resource type="Texture2D" uid="uid://cd20xath30hqo" path="res://assets/UI/Bar/HealthBar5.png" id="2_pokpe"]
+[ext_resource type="Texture2D" uid="uid://bcjb2fslu15pn" path="res://assets/UI/Bar/HealthBar1.png" id="3_r7lkr"]
+[ext_resource type="Texture2D" uid="uid://clhy72kh8mfjs" path="res://assets/UI/Bar/HealthBar7.png" id="4_xxnaf"]
+[ext_resource type="Texture2D" uid="uid://lmmiptbp6gbm" path="res://assets/UI/Bar/HealthBar3.png" id="5_qqmym"]
+[ext_resource type="Texture2D" uid="uid://bhi6j85sjvlhx" path="res://assets/UI/Bar/EnergyBar5.png" id="6_ylr26"]
+[ext_resource type="Texture2D" uid="uid://boca5xdctsb6g" path="res://assets/UI/Bar/EnergyBar1.png" id="7_3ahi5"]
+[ext_resource type="Texture2D" uid="uid://bgafui3v3v3sd" path="res://assets/UI/Bar/EnergyBar6.png" id="8_c4n4e"]
+[ext_resource type="Texture2D" uid="uid://bhluparem772e" path="res://assets/UI/Bar/EnergyBar2.png" id="9_mwloo"]
+[ext_resource type="Texture2D" uid="uid://vbawar4t8gys" path="res://assets/UI/Bar/EnergyBar7.png" id="10_5vkj4"]
+[ext_resource type="Texture2D" uid="uid://c837kwoi0celx" path="res://assets/UI/Bar/EnergyBar3.png" id="11_he5h8"]
+
+[node name="Bars" type="Node2D"]
+script = ExtResource("1_xbqk1")
+
+[node name="Health" type="Node2D" parent="."]
+position = Vector2(1, 0)
+
+[node name="HealthBar1" type="TextureProgressBar" parent="Health"]
+texture_filter = 1
+offset_right = 32.0
+offset_bottom = 14.0
+scale = Vector2(0.997715, 1)
+max_value = 50.0
+texture_under = ExtResource("2_pokpe")
+texture_progress = ExtResource("3_r7lkr")
+
+[node name="HealthBar2" type="TextureProgressBar" parent="Health"]
+texture_filter = 1
+offset_left = 32.0
+offset_right = 64.0
+offset_bottom = 14.0
+scale = Vector2(0.997715, 1)
+max_value = 50.0
+texture_under = ExtResource("4_xxnaf")
+texture_progress = ExtResource("5_qqmym")
+
+[node name="Stamina" type="Node2D" parent="."]
+position = Vector2(-1, 0)
+
+[node name="StaminaBar1" type="TextureProgressBar" parent="Stamina"]
+texture_filter = 1
+offset_left = 1.0
+offset_top = 15.0
+offset_right = 17.0
+offset_bottom = 20.0
+max_value = 25.0
+texture_under = ExtResource("6_ylr26")
+texture_progress = ExtResource("7_3ahi5")
+
+[node name="StaminaBar2" type="TextureProgressBar" parent="Stamina"]
+texture_filter = 1
+offset_left = 17.0
+offset_top = 15.0
+offset_right = 33.0
+offset_bottom = 20.0
+max_value = 25.0
+texture_under = ExtResource("8_c4n4e")
+texture_progress = ExtResource("9_mwloo")
+
+[node name="StaminaBar3" type="TextureProgressBar" parent="Stamina"]
+texture_filter = 1
+offset_left = 33.0
+offset_top = 15.0
+offset_right = 49.0
+offset_bottom = 20.0
+max_value = 25.0
+texture_under = ExtResource("8_c4n4e")
+texture_progress = ExtResource("9_mwloo")
+
+[node name="StaminaBar4" type="TextureProgressBar" parent="Stamina"]
+texture_filter = 1
+offset_left = 49.0
+offset_top = 15.0
+offset_right = 65.0
+offset_bottom = 20.0
+max_value = 25.0
+texture_under = ExtResource("10_5vkj4")
+texture_progress = ExtResource("11_he5h8")

@@ -1,0 +1,81 @@
+[gd_scene load_steps=11 format=3 uid="uid://sdov724ondtv"]
+
+[ext_resource type="Texture2D" uid="uid://bctxd1pcw5ifc" path="res://assets/sprites/environment/animated objects/Pumpkin_portal2.png" id="1_sl3mu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rk44c"]
+atlas = ExtResource("1_sl3mu")
+region = Rect2(384, 0, 128, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gwlpl"]
+atlas = ExtResource("1_sl3mu")
+region = Rect2(256, 0, 128, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7t5ir"]
+atlas = ExtResource("1_sl3mu")
+region = Rect2(128, 0, 128, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mj01f"]
+atlas = ExtResource("1_sl3mu")
+region = Rect2(0, 0, 128, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rlq4e"]
+atlas = ExtResource("1_sl3mu")
+region = Rect2(0, 0, 128, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fgko3"]
+atlas = ExtResource("1_sl3mu")
+region = Rect2(128, 0, 128, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ojmh0"]
+atlas = ExtResource("1_sl3mu")
+region = Rect2(256, 0, 128, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v7ihh"]
+atlas = ExtResource("1_sl3mu")
+region = Rect2(384, 0, 128, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ab8xp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rk44c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gwlpl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7t5ir")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mj01f")
+}],
+"loop": false,
+"name": &"close",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rlq4e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fgko3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ojmh0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v7ihh")
+}],
+"loop": false,
+"name": &"open",
+"speed": 7.0
+}]
+
+[node name="Pumpkin" type="AnimatedSprite2D"]
+texture_filter = 1
+position = Vector2(564, 561)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_ab8xp")
+animation = &"open"
+frame = 3
+frame_progress = 1.0
